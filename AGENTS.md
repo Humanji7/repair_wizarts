@@ -75,22 +75,27 @@
 - Document any functional risk and fallback before merging.
 
 ### Plan Progress (live)
-- [x] PR1 — Enforce npm; remove `yarn.lock`; build green. Status: PR created, awaiting frontend review.
-- [x] PR2 — Enable `<React.StrictMode>`; add DOMPurify-backed `sanitizeHtml` helper; replace unsafe HTML (Article); add unit tests (`src/shared/lib/sanitizeHtml.test.ts`) and setup (`src/setupTests.ts`).
+- [x] PR1 — Enforce npm; remove `yarn.lock`; build green. Status: PR создан, ждёт ревью фронта.
+- [x] PR2 — Enable `<React.StrictMode>`; add DOMPurify-backed `sanitizeHtml` helper; replace unsafe HTML (Article); add unit tests (`src/shared/lib/sanitizeHtml.test.ts`) и `src/setupTests.ts`.
 - [x] PR3 — Baseline lint/format + size budgets; document legacy webpack config; add Article sanitized render test. (`npm run lint`, `typecheck`, `test -- --watchAll=false`, `build`, `analyze`, `size` пройдены.)
 - [x] PR4 — Fix typecheck error: convert `src/components/profileNumberClient/ProfileSlider.jsx` to TSX; add prop typing; update imports.
 - [x] PR5 — Header profile dropdown UX: open on click, close on outside, remove hover logic (Toolbar/DropdownSetout).
 - [x] PR6 — i18n: локализация HomeV2, Kirill, мастеров; словари обновлены; тесты/типчек зелёные.
-- [x] PR7 — i18n: локализованы Reviews, Articles, ChoiceOfReplenishment, словарь en заполнен; `typecheck`, `test` зелёные.
+- [x] PR7 — i18n: локализованы Reviews, Articles, ChoiceOfReplenishment; словарь en заполнен; `typecheck`, `test` зелёные.
 - [x] PR8 — Меню/каталог услуг: все текстовые строки переведены через `useLanguage`, en словарь заполнен.
+- [ ] PR9 — Lazy-load & skeleton rollup (`feat/skeletons-lazyload-rollup`): доменные fallbacks, skeleton-компоненты для orders/applications/chat/wallet/profile. **Статус:** готов к отдельному PR (ждём апрув PR8, затем отправляем).
 
 ### Day 2 — Visible Wins (актуальный остаток)
-- Lazy-load тяжёлых страниц/блоков (`React.lazy` + `Suspense`) — **TODO**
+- Lazy-load тяжёлых страниц/блоков (`React.lazy` + `Suspense`) — **IN REVIEW** (покрыто PR2–PR9; ждём апрувы и дальнейшие вычитки по тяжёлым экранам).
 - Ввести `shared/ui/Modal` на RSuite и заменить ≥2 `reactjs-popup` — **TODO**
 - `shared/api` клиент + миграция одного ключевого запроса — **TODO**
 - Оптимизация `useEffect`, вынос сложной логики в хуки/субкомпоненты — **IN PROGRESS**
 - Унификация поведения меню (desktop/mobile/Menu) и вынос общей логики — **IN PROGRESS**
 - React Query миграция и дальнейший i18n — **ON HOLD** (ждём обновление фронта)
+
+### PR / ветки
+- `feat/step-2-modals-and-refactor` — держит работу до `9961e9d`; PR на ревью у фронтов.
+- `feat/skeletons-lazyload-rollup` — свежие коммиты с skeleton’ами и обновлёнными Suspense fallbacks; отдельный PR подготавливается.
 
 ### Дополнительные заметки
 - API данные (категории/услуги) приходят на русском; без бэкенд-поддержки перевести нельзя.
