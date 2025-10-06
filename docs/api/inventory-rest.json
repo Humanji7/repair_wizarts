@@ -1,0 +1,1483 @@
+[
+  {
+    "featureOwner": "LoginPage",
+    "component": "LoginPage.tsx",
+    "path": "src/features/LoginPage/LoginPage.tsx",
+    "line": 17,
+    "type": "thunk_import",
+    "description": "Import fetchUser thunk",
+    "code": "import {fetchUser} from \"../../slices/user.slice\";"
+  },
+  {
+    "featureOwner": "LoginPage",
+    "component": "LoginPage.tsx",
+    "path": "src/features/LoginPage/LoginPage.tsx",
+    "line": 114,
+    "type": "thunk_call",
+    "description": "Dispatch fetchUser thunk",
+    "code": "dispatch(fetchUser());"
+  },
+  {
+    "featureOwner": "RegistrationPage",
+    "component": "RegistrationMasterPage.tsx",
+    "path": "src/features/RegistrationPage/RegistrationMasterPage/RegistrationMasterPage.tsx",
+    "line": 15,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "RegistrationPage",
+    "component": "RegistrationMasterPage.tsx",
+    "path": "src/features/RegistrationPage/RegistrationMasterPage/RegistrationMasterPage.tsx",
+    "line": 110,
+    "type": "api_call",
+    "description": "Register master user",
+    "code": "const response = await appFetch('register/', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "HomePage",
+    "component": "HomePage.tsx",
+    "path": "src/features/HomePage/HomePage.tsx",
+    "line": 0,
+    "type": "no_http_calls",
+    "description": "No HTTP calls found in this component",
+    "code": ""
+  },
+  {
+    "featureOwner": "WhyChooseUsBlock",
+    "component": "WhyChooseUsBlock.tsx",
+    "path": "src/features/HomePage/WhyChooseUsBlock/WhyChooseUsBlock.tsx",
+    "line": 0,
+    "type": "no_http_calls",
+    "description": "No HTTP calls found in this component",
+    "code": ""
+  },
+  {
+    "featureOwner": "NotFoundPage",
+    "component": "NotFoundPage.tsx",
+    "path": "src/features/NotFoundPage/NotFoundPage.tsx",
+    "line": 0,
+    "type": "no_http_calls",
+    "description": "No HTTP calls found in this component",
+    "code": ""
+  },
+  {
+    "featureOwner": "RegistrationPage",
+    "component": "RegistrationPickPage.tsx",
+    "path": "src/features/RegistrationPage/RegistrationPickPage/RegistrationPickPage.tsx",
+    "line": 0,
+    "type": "no_http_calls",
+    "description": "No HTTP calls found in this component",
+    "code": ""
+  },
+  {
+    "featureOwner": "RegistrationPage",
+    "component": "RegistrationUserPage.tsx",
+    "path": "src/features/RegistrationPage/RegistrationUserPage/RegistrationUserPage.tsx",
+    "line": 0,
+    "type": "no_http_calls",
+    "description": "No HTTP calls found in this component",
+    "code": ""
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 13,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 35,
+    "type": "api_call",
+    "description": "Fetch device data as admin",
+    "code": "await appFetch('/drive/get/' + deviceId, {}, true)"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 81,
+    "type": "fetch_call",
+    "description": "Direct fetch call for sections",
+    "code": "fetch('https://api.example.com/sections', { method: 'GET' })"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 176,
+    "type": "fetch_call",
+    "description": "Direct fetch call for sections data",
+    "code": "await fetch('https://api.example.com/sections')"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 194,
+    "type": "fetch_call",
+    "description": "Direct fetch call for subsections data",
+    "code": "await fetch('https://api.example.com/subsections')"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevice.jsx",
+    "path": "src/components/addDevices/AddedDevice.jsx",
+    "line": 213,
+    "type": "fetch_call",
+    "description": "Direct fetch call for services data",
+    "code": "await fetch('https://api.example.com/services')"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevices.jsx",
+    "path": "src/components/addDevices/AddedDevices.jsx",
+    "line": 9,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddedDevices.jsx",
+    "path": "src/components/addDevices/AddedDevices.jsx",
+    "line": 18,
+    "type": "api_call",
+    "description": "Fetch archive drive data",
+    "code": "appFetch('/drive/archive', { body: { lc: 999999999999999999 } })"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddDevices.jsx",
+    "path": "src/components/addDevices/AddDevices.jsx",
+    "line": 11,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddDevices.jsx",
+    "path": "src/components/addDevices/AddDevices.jsx",
+    "line": 37,
+    "type": "api_call",
+    "description": "Upload device file",
+    "code": "await appFetch('/dropbox/file/', { method: 'POST', body: formData })"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddDevices.jsx",
+    "path": "src/components/addDevices/AddDevices.jsx",
+    "line": 92,
+    "type": "fetch_call",
+    "description": "Direct fetch call for sections data",
+    "code": "await fetch('https://api.example.com/sections')"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddDevices.jsx",
+    "path": "src/components/addDevices/AddDevices.jsx",
+    "line": 110,
+    "type": "fetch_call",
+    "description": "Direct fetch call for subsections data",
+    "code": "await fetch('https://api.example.com/subsections')"
+  },
+  {
+    "featureOwner": "AddDevices",
+    "component": "AddDevices.jsx",
+    "path": "src/components/addDevices/AddDevices.jsx",
+    "line": 129,
+    "type": "fetch_call",
+    "description": "Direct fetch call for services data",
+    "code": "await fetch('https://api.example.com/services')"
+  },
+  {
+    "featureOwner": "ChoiceOfReplenishmentMethod",
+    "component": "ChoiceOfReplenishmentMethodClient.jsx",
+    "path": "src/components/ChoiceOfReplenishmentMethod/ChoiceOfReplenishmentMethodClient.jsx",
+    "line": 48,
+    "type": "comment",
+    "description": "TODO comment for async state",
+    "code": "const isLoading = false; // TODO: hook up to async state if/when fetching"
+  },
+  {
+    "featureOwner": "Service",
+    "component": "ServiceDetail.jsx",
+    "path": "src/components/Service/ServiceDetail.jsx",
+    "line": 19,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Service",
+    "component": "ServiceDetail.jsx",
+    "path": "src/components/Service/ServiceDetail.jsx",
+    "line": 131,
+    "type": "api_call",
+    "description": "Fetch user data as admin",
+    "code": "appFetch('user', { body: { lc: 99999999999 } }, true)"
+  },
+  {
+    "featureOwner": "Service",
+    "component": "ServiceDetail.jsx",
+    "path": "src/components/Service/ServiceDetail.jsx",
+    "line": 198,
+    "type": "api_call",
+    "description": "Fetch car data",
+    "code": "await appFetch('user/authorized/car', { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Service",
+    "component": "ServiceDetail.jsx",
+    "path": "src/components/Service/ServiceDetail.jsx",
+    "line": 313,
+    "type": "api_call",
+    "description": "Submit repair data",
+    "code": "await appFetch('service/repair_type', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "App",
+    "component": "remont.jsx",
+    "path": "src/components/remont.jsx",
+    "line": 20,
+    "type": "fetch_call",
+    "description": "Direct fetch call for subsections",
+    "code": "await fetch('https://api.example.com/subsections')"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 3,
+    "type": "thunk_import",
+    "description": "Import fetchUser thunk",
+    "code": "import { fetchUser, selectUser, selectUserStatus } from '../slices/user.slice';"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 40,
+    "type": "thunk_import",
+    "description": "Import fetchServices thunk",
+    "code": "import { fetchServices } from '../slices/services.slice';"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 218,
+    "type": "thunk_call",
+    "description": "Dispatch fetchUser thunk",
+    "code": "dispatch(fetchUser());"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 227,
+    "type": "fetch_call",
+    "description": "Direct fetch call for categories",
+    "code": "await fetch('https://api.example.com/categories', { method: 'GET' })"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 261,
+    "type": "thunk_call",
+    "description": "Dispatch fetchUser thunk",
+    "code": "dispatch(fetchUser());"
+  },
+  {
+    "featureOwner": "App",
+    "component": "App.jsx",
+    "path": "src/components/App.jsx",
+    "line": 268,
+    "type": "thunk_call",
+    "description": "Dispatch fetchServices thunk",
+    "code": "dispatch(fetchServices());"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 35,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 140,
+    "type": "fetch_call",
+    "description": "Fetch dropbox object URL",
+    "code": "await fetch(apiUrl, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 179,
+    "type": "fetch_call",
+    "description": "Direct fetch call to external API",
+    "code": "fetch(`https://ibronevik.ru/taxi/c/tutor/api/v1/dropbox/file/${id}`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 293,
+    "type": "function_call",
+    "description": "Call fetchDropboxObjectUrl function",
+    "code": "await fetchDropboxObjectUrl(fileId)"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 556,
+    "type": "function_definition",
+    "description": "Define refetchRequests function type",
+    "code": "refetchRequests: () => void; // Используем refetch"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 1334,
+    "type": "api_call",
+    "description": "Fetch client data as admin",
+    "code": "appFetch(`user/${client_id}`, {}, true)"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 1337,
+    "type": "api_call",
+    "description": "Fetch master data as admin",
+    "code": "appFetch(`user/${master_id}`, {}, true)"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 1437,
+    "type": "api_call",
+    "description": "Send message via API",
+    "code": "await appFetch('chat/dialog', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 1593,
+    "type": "function_call",
+    "description": "Refetch user requests",
+    "code": "userRequests.refetch();"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "Kirill.tsx",
+    "path": "src/components/full-chat/fakeChat/Kirill.tsx",
+    "line": 1625,
+    "type": "function_call",
+    "description": "Refetch user requests",
+    "code": "userRequests.refetch();"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "AddFeedbackModal.jsx",
+    "path": "src/components/full-chat/fakeChat/AddFeedbackModal.jsx",
+    "line": 5,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "AddFeedbackModal.jsx",
+    "path": "src/components/full-chat/fakeChat/AddFeedbackModal.jsx",
+    "line": 26,
+    "type": "api_call",
+    "description": "Submit feedback",
+    "code": "await appFetch('submission/feedback', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "AddFeedbackModal.jsx",
+    "path": "src/components/full-chat/fakeChat/AddFeedbackModal.jsx",
+    "line": 64,
+    "type": "api_call",
+    "description": "Fetch drive data by ID",
+    "code": "await appFetch(`drive/get/${id}`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "BlackListModal.jsx",
+    "path": "src/components/full-chat/fakeChat/BlackListModal.jsx",
+    "line": 7,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "BlackListModal.jsx",
+    "path": "src/components/full-chat/fakeChat/BlackListModal.jsx",
+    "line": 22,
+    "type": "api_call",
+    "description": "Fetch user data as admin",
+    "code": "await appFetch(`user/${item.id}`, {}, true)"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "DisputeModal_v2.jsx",
+    "path": "src/components/full-chat/fakeChat/DisputeModal_v2.jsx",
+    "line": 11,
+    "type": "function_prop",
+    "description": "Receive refetchRequests prop",
+    "code": "refetchRequests,"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "DisputeModal_v2.jsx",
+    "path": "src/components/full-chat/fakeChat/DisputeModal_v2.jsx",
+    "line": 43,
+    "type": "function_call",
+    "description": "Call refetchRequests function",
+    "code": "refetchRequests();"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "AddOrderModal.jsx",
+    "path": "src/components/full-chat/fakeChat/AddOrderModal.jsx",
+    "line": 32,
+    "type": "fetch_call",
+    "description": "Direct fetch call with URLSearchParams",
+    "code": "await fetch('/api/orders', { method: 'POST', body: new URLSearchParams(formData) })"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "Login.jsx",
+    "path": "src/components/Registration/Login.jsx",
+    "line": 5,
+    "type": "thunk_import",
+    "description": "Import fetchUser thunk",
+    "code": "import { fetchUser } from '../../slices/user.slice'"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "Login.jsx",
+    "path": "src/components/Registration/Login.jsx",
+    "line": 184,
+    "type": "thunk_call",
+    "description": "Dispatch fetchUser thunk",
+    "code": "dispatch(fetchUser())"
+  },
+  {
+    "featureOwner": "Settings",
+    "component": "Profile.jsx",
+    "path": "src/components/Settings/Profile.jsx",
+    "line": 89,
+    "type": "commented_fetch",
+    "description": "Commented fetch call",
+    "code": "~ const res = await fetch('/api/user/profile', { method: 'PUT' })"
+  },
+  {
+    "featureOwner": "Settings",
+    "component": "Profile.jsx",
+    "path": "src/components/Settings/Profile.jsx",
+    "line": 119,
+    "type": "commented_fetch",
+    "description": "Commented fetch call",
+    "code": "~ const res = await fetch('/api/user/avatar', { method: 'POST' })"
+  },
+  {
+    "featureOwner": "Settings",
+    "component": "Profile.jsx",
+    "path": "src/components/Settings/Profile.jsx",
+    "line": 155,
+    "type": "commented_fetch",
+    "description": "Commented fetch call",
+    "code": "~ const res = await fetch('/api/user/notifications', { method: 'PUT' })"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "AuthLogin.jsx",
+    "path": "src/components/Registration/AuthLogin.jsx",
+    "line": 5,
+    "type": "thunk_import",
+    "description": "Import fetchUser thunk",
+    "code": "import { fetchUser } from '../../slices/user.slice';"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "AuthLogin.jsx",
+    "path": "src/components/Registration/AuthLogin.jsx",
+    "line": 20,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "AuthLogin.jsx",
+    "path": "src/components/Registration/AuthLogin.jsx",
+    "line": 180,
+    "type": "api_call",
+    "description": "Fetch user car data",
+    "code": "await appFetch('user/authorized/car', { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Registration",
+    "component": "AuthLogin.jsx",
+    "path": "src/components/Registration/AuthLogin.jsx",
+    "line": 203,
+    "type": "thunk_call",
+    "description": "Dispatch fetchUser thunk",
+    "code": "dispatch(fetchUser());"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "profileNumber.jsx",
+    "path": "src/components/Chat/profileNumber.jsx",
+    "line": 10,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Chat",
+    "component": "profileNumber.jsx",
+    "path": "src/components/Chat/profileNumber.jsx",
+    "line": 23,
+    "type": "api_call",
+    "description": "Fetch archive drive data",
+    "code": "await appFetch('drive/archive', { body: { lc: 999999999999999999 } })"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 8,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() {},"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 12,
+    "type": "function_definition",
+    "description": "Define refetchFn function",
+    "code": "const refetchFn = (resolved) => (value) => {"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 18,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 27,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 38,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 47,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 62,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch: () => {},"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 85,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 105,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { service().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 117,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { serviceList[i]().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useService.js",
+    "path": "src/hooks/useService.js",
+    "line": 126,
+    "type": "function_definition",
+    "description": "Define refetch function",
+    "code": "refetch() { serviceList[i]().then(refetchFn(true)).catch(refetchFn(false)); }"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useUserRating.js",
+    "path": "src/hooks/useUserRating.js",
+    "line": 7,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "hooks",
+    "component": "useUserRating.js",
+    "path": "src/hooks/useUserRating.js",
+    "line": 31,
+    "type": "api_call",
+    "description": "Fetch archive drive data for rating",
+    "code": "await appFetch('drive/archive', { body: { lc: 999999999999999999 } })"
+  },
+  {
+    "featureOwner": "utilities",
+    "component": "appFetch.js",
+    "path": "src/utilities/appFetch.js",
+    "line": 37,
+    "type": "fetch_call",
+    "description": "Direct fetch call for token refresh",
+    "code": "await fetch(BASE_URL + 'user/refresh', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: getRefreshToken() }) })"
+  },
+  {
+    "featureOwner": "utilities",
+    "component": "appFetch.js",
+    "path": "src/utilities/appFetch.js",
+    "line": 66,
+    "type": "function_definition",
+    "description": "Define appFetch function",
+    "code": "const appFetch = async (location, init = {}, admin) => {"
+  },
+  {
+    "featureOwner": "utilities",
+    "component": "appFetch.js",
+    "path": "src/utilities/appFetch.js",
+    "line": 69,
+    "type": "fetch_call",
+    "description": "Direct fetch call in appFetch utility",
+    "code": "await fetch(BASE_URL + location, { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, ...init })"
+  },
+  {
+    "featureOwner": "utilities",
+    "component": "appFetch.js",
+    "path": "src/utilities/appFetch.js",
+    "line": 100,
+    "type": "recursive_call",
+    "description": "Recursive appFetch call",
+    "code": "return appFetch(location, init);"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "messages.slice.js",
+    "path": "src/slices/messages.slice.js",
+    "line": 6,
+    "type": "thunk_definition",
+    "description": "Define fetchMessages thunk",
+    "code": "export const fetchMessages = createAsyncThunk('messages/fetch', async () => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "messages.slice.js",
+    "path": "src/slices/messages.slice.js",
+    "line": 39,
+    "type": "reducer_case",
+    "description": "Handle fetchMessages pending state",
+    "code": ".addCase(fetchMessages.pending, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "messages.slice.js",
+    "path": "src/slices/messages.slice.js",
+    "line": 42,
+    "type": "reducer_case",
+    "description": "Handle fetchMessages fulfilled state",
+    "code": ".addCase(fetchMessages.fulfilled, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "messages.slice.js",
+    "path": "src/slices/messages.slice.js",
+    "line": 48,
+    "type": "reducer_case",
+    "description": "Handle fetchMessages rejected state",
+    "code": ".addCase(fetchMessages.rejected, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "services.slice.js",
+    "path": "src/slices/services.slice.js",
+    "line": 8,
+    "type": "thunk_definition",
+    "description": "Define fetchServices thunk",
+    "code": "const fetchServices = createAsyncThunk('services/fetch', async () => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "services.slice.js",
+    "path": "src/slices/services.slice.js",
+    "line": 29,
+    "type": "reducer_case",
+    "description": "Handle fetchServices pending state",
+    "code": ".addCase(fetchServices.pending, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "services.slice.js",
+    "path": "src/slices/services.slice.js",
+    "line": 32,
+    "type": "reducer_case",
+    "description": "Handle fetchServices fulfilled state",
+    "code": ".addCase(fetchServices.fulfilled, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "services.slice.js",
+    "path": "src/slices/services.slice.js",
+    "line": 36,
+    "type": "reducer_case",
+    "description": "Handle fetchServices rejected state",
+    "code": ".addCase(fetchServices.rejected, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "user.slice.js",
+    "path": "src/slices/user.slice.js",
+    "line": 6,
+    "type": "thunk_definition",
+    "description": "Define fetchUser thunk",
+    "code": "const fetchUser = createAsyncThunk('user/fetch', (_, { rejectWithValue }) =>"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "user.slice.js",
+    "path": "src/slices/user.slice.js",
+    "line": 34,
+    "type": "reducer_case",
+    "description": "Handle fetchUser pending state",
+    "code": ".addCase(fetchUser.pending, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "user.slice.js",
+    "path": "src/slices/user.slice.js",
+    "line": 37,
+    "type": "reducer_case",
+    "description": "Handle fetchUser fulfilled state",
+    "code": ".addCase(fetchUser.fulfilled, (state, action) => {"
+  },
+  {
+    "featureOwner": "slices",
+    "component": "user.slice.js",
+    "path": "src/slices/user.slice.js",
+    "line": 41,
+    "type": "reducer_case",
+    "description": "Handle fetchUser rejected state",
+    "code": ".addCase(fetchUser.rejected, (state, action) => {"
+  },
+  {
+    "featureOwner": "services",
+    "component": "dialog.service.js",
+    "path": "src/services/dialog.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "dialog.service.js",
+    "path": "src/services/dialog.service.js",
+    "line": 4,
+    "type": "api_call",
+    "description": "Fetch chat dialog",
+    "code": "appFetch(\"chat/dialog\", { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "reviews.service.js",
+    "path": "src/services/reviews.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "reviews.service.js",
+    "line": 3,
+    "type": "api_call",
+    "description": "Fetch reviews",
+    "code": "const getReviews = () => appFetch(\"index/reviews\")"
+  },
+  {
+    "featureOwner": "services",
+    "component": "reviews.service.js",
+    "line": 27,
+    "type": "api_call",
+    "description": "Create review",
+    "code": "const createReview = (payload) => appFetch(\"index/review\", { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "offer.service.js",
+    "path": "src/services/offer.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "offer.service.js",
+    "line": 3,
+    "type": "api_call",
+    "description": "Get offers by request ID",
+    "code": "const getOffers = (id) => appFetch(\"submission/offers?request_id=\" + id)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "offer.service.js",
+    "line": 6,
+    "type": "api_call",
+    "description": "Create offer",
+    "code": "appFetch(\"submission/offer\", { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "offer.service.js",
+    "line": 12,
+    "type": "api_call",
+    "description": "Accept offer",
+    "code": "appFetch(\"submission/accept-offer/\" + id, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "balance.service.js",
+    "path": "src/services/balance.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "balance.service.js",
+    "line": 3,
+    "type": "api_call",
+    "description": "Get balance history",
+    "code": "const getBalanceHistory = () => appFetch(\"user/deposit-history\")"
+  },
+  {
+    "featureOwner": "services",
+    "component": "balance.service.js",
+    "line": 6,
+    "type": "api_call",
+    "description": "Replenish balance",
+    "code": "appFetch(\"user/replenish-balance/\" + amount, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "balance.service.js",
+    "line": 10,
+    "type": "api_call",
+    "description": "Update balance",
+    "code": "const updateBalance = (id) => appFetch(\"user/confirm-payment/\" + id)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "path": "src/services/auth.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "line": 25,
+    "type": "api_call",
+    "description": "Authenticate user",
+    "code": "await appFetch('/auth/', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "line": 33,
+    "type": "api_call",
+    "description": "Get token",
+    "code": "return appFetch('/token/', { body: { auth_hash } });"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "line": 37,
+    "type": "api_call",
+    "description": "Register user",
+    "code": "appFetch('/register', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "line": 42,
+    "type": "api_call",
+    "description": "Register master",
+    "code": "appFetch('/register', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "auth.service.js",
+    "line": 47,
+    "type": "api_call",
+    "description": "Add master role",
+    "code": "appFetch('user/add-master', { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "path": "src/services/request.service.js",
+    "line": 2,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 9,
+    "type": "api_call",
+    "description": "Create request",
+    "code": "return appFetch('submission/request', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 42,
+    "type": "api_call",
+    "description": "Update request",
+    "code": "return appFetch('submission/request/' + id, { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 61,
+    "type": "api_call",
+    "description": "Complete request",
+    "code": "appFetch(`submission/complete-request/${id}?status=${payload}`, {})"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 64,
+    "type": "api_call",
+    "description": "Get request by ID",
+    "code": "appFetch('drive/get/' + requestId, {})"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 69,
+    "type": "api_call",
+    "description": "Delete request",
+    "code": "appFetch('submission/request/' + requestId)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 71,
+    "type": "api_call",
+    "description": "Get all requests",
+    "code": "return appFetch('drive', { body: { u_a_role: 1 } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 79,
+    "type": "api_call",
+    "description": "Get requests with limit",
+    "code": "appFetch('drive', { body: { u_a_role: 1, lc: 999999999999999999 } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 85,
+    "type": "api_call",
+    "description": "Get archived requests",
+    "code": "appFetch('drive/archive', { body: { lc: 99999999999 } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 124,
+    "type": "api_call",
+    "description": "Get master requests",
+    "code": "const getMasterRequests = () => appFetch('drive', { body: { u_a_role: 1 } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "request.service.js",
+    "line": 127,
+    "type": "api_call",
+    "description": "Get master personal requests",
+    "code": "const getMasterPersonalRequests = () => appFetch('submission/master-requests')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "feedback.service.js",
+    "path": "src/services/feedback.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "feedback.service.js",
+    "line": 4,
+    "type": "api_call",
+    "description": "Get feedbacks by username",
+    "code": "appFetch(\"submission/feedbacks/\" + username)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "feedback.service.js",
+    "line": 14,
+    "type": "api_call",
+    "description": "Create feedback",
+    "code": "return appFetch(\"submission/feedback\", { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "feedback.service.js",
+    "line": 24,
+    "type": "api_call",
+    "description": "Update feedback",
+    "code": "appFetch(\"submission/feedback/\" + payload.id, { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "verification.service.js",
+    "path": "src/services/verification.service.js",
+    "line": 2,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch, { BASE_URL } from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "services",
+    "component": "verification.service.js",
+    "line": 58,
+    "type": "api_call",
+    "description": "Start email verification",
+    "code": "appFetch('email/verification/start', { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "verification.service.js",
+    "line": 61,
+    "type": "fetch_call",
+    "description": "Complete email verification",
+    "code": "fetch(BASE_URL + `email/verification/complete?ev_hash=${code}`).then((res) =>"
+  },
+  {
+    "featureOwner": "services",
+    "component": "verification.service.js",
+    "line": 66,
+    "type": "fetch_call",
+    "description": "Send phone code",
+    "code": "fetch(BASE_URL + 'user/send-phone-code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone_number }) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "verification.service.js",
+    "line": 74,
+    "type": "fetch_call",
+    "description": "Verify phone",
+    "code": "fetch(BASE_URL + 'user/verify-phone/' + code, { method: 'POST', headers: { 'Content-Type': 'application/json' } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "location.service.js",
+    "path": "src/services/location.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "location.service.js",
+    "line": 9,
+    "type": "api_call",
+    "description": "Get cities",
+    "code": "const getCities = () => appFetch(\"index/cities\")"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "path": "src/services/article.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from \"../utilities/appFetch\""
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 3,
+    "type": "api_call",
+    "description": "Get article by ID",
+    "code": "const getArticle = (id) => appFetch(\"index/article/\" + id)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 5,
+    "type": "api_call",
+    "description": "Get all articles",
+    "code": "const getArticles = () => appFetch(\"index/articles\")"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 55,
+    "type": "api_call",
+    "description": "Get article comments",
+    "code": "appFetch(`index/article/${articleId}/comments`)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 86,
+    "type": "api_call",
+    "description": "Create article comment",
+    "code": "appFetch(`index/article/${articleId}/comment`, { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 92,
+    "type": "api_call",
+    "description": "Like article",
+    "code": "appFetch(`index/like-article/${articleId}`, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 97,
+    "type": "api_call",
+    "description": "Dislike article",
+    "code": "appFetch(`index/dislike-article/${articleId}`, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 102,
+    "type": "api_call",
+    "description": "Like article comment",
+    "code": "appFetch(`index/article/comment/${commentId}/like`, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "article.service.js",
+    "line": 107,
+    "type": "api_call",
+    "description": "Dislike article comment",
+    "code": "appFetch(`index/article/comment/${commentId}/dislike`, { method: 'POST' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "path": "src/services/service.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 3,
+    "type": "api_call",
+    "description": "Get all services",
+    "code": "const getServices = () => appFetch('service/all-services')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 5,
+    "type": "api_call",
+    "description": "Get service categories",
+    "code": "const getServiceCategories = () => appFetch('service/categories')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 7,
+    "type": "api_call",
+    "description": "Get service types",
+    "code": "const getServiceTypes = () => appFetch('service/types')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 10,
+    "type": "api_call",
+    "description": "Get service types by category ID",
+    "code": "appFetch('service/types/' + categoryId)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 12,
+    "type": "api_call",
+    "description": "Get service devices",
+    "code": "const getServiceDevices = () => appFetch('service/devices')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 15,
+    "type": "api_call",
+    "description": "Get service devices by type ID",
+    "code": "appFetch('service/devices/' + typeId)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 17,
+    "type": "api_call",
+    "description": "Get service repairs",
+    "code": "const getServiceRepairs = () => appFetch('service/repair_types')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 20,
+    "type": "api_call",
+    "description": "Get service repairs by device ID",
+    "code": "appFetch('service/repair_types/' + deviceId)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 228,
+    "type": "api_call",
+    "description": "Get master repairs by username",
+    "code": "appFetch('service/master-repairs?master_username=' + username)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 230,
+    "type": "api_call",
+    "description": "Get master services by ID",
+    "code": "const getMasterServices = (id) => appFetch('service/master-services/' + id)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 233,
+    "type": "api_call",
+    "description": "Update master repair",
+    "code": "appFetch('service/master-repair/' + repairId, { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 239,
+    "type": "api_call",
+    "description": "Get repair type by ID",
+    "code": "appFetch('service/repair_type/' + repairId, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "service.service.js",
+    "line": 245,
+    "type": "api_call",
+    "description": "Delete master repair",
+    "code": "appFetch('service/master-repair/' + repairId, { method: 'DELETE' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "path": "src/services/user.service.js",
+    "line": 2,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 4,
+    "type": "api_call",
+    "description": "Get current user",
+    "code": "const getUser = () => appFetch('user/authorized')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 27,
+    "type": "api_call",
+    "description": "Get unread messages",
+    "code": "const getUserUnreadMessages = () => appFetch('user/unread-messages')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 29,
+    "type": "api_call",
+    "description": "Get master by username",
+    "code": "const getMasterByUsername = (username) => appFetch('user/master/' + username)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 31,
+    "type": "api_call",
+    "description": "Get master repairs",
+    "code": "const getMasterRepairs = () => appFetch('service/master-repairs')"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 33,
+    "type": "api_call",
+    "description": "Get client by ID",
+    "code": "const getClientById = (id) => appFetch('user/client/' + id)"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 42,
+    "type": "api_call",
+    "description": "Update user profile",
+    "code": "return appFetch('user/update', { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 61,
+    "type": "api_call",
+    "description": "Request password reset",
+    "code": "appFetch('newpass', { method: 'POST', body: JSON.stringify({ email }) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 81,
+    "type": "api_call",
+    "description": "Get all users",
+    "code": "appFetch('user', { body: { lc: 99999999999 } })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 98,
+    "type": "api_call",
+    "description": "Update user by ID",
+    "code": "return appFetch('user/update/' + userId, { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 108,
+    "type": "api_call",
+    "description": "Delete user account",
+    "code": "await appFetch('user/delete-account', { method: 'DELETE' })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 114,
+    "type": "api_call",
+    "description": "Create repair type",
+    "code": "appFetch('service/repair_type', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 120,
+    "type": "api_call",
+    "description": "Update master repair",
+    "code": "appFetch('service/master-repair/' + id, { method: 'PATCH', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 130,
+    "type": "api_call",
+    "description": "Recover password",
+    "code": "appFetch('user/recover-password', { method: 'POST', body: JSON.stringify({ token, password }) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 136,
+    "type": "api_call",
+    "description": "Reset password",
+    "code": "appFetch('user/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) })"
+  },
+  {
+    "featureOwner": "services",
+    "component": "user.service.js",
+    "line": 144,
+    "type": "api_call",
+    "description": "Change password",
+    "code": "appFetch('user/change-password', { method: 'POST', body: JSON.stringify({ current_password, new_password }) })"
+  }
+]

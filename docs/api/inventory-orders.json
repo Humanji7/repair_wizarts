@@ -1,0 +1,236 @@
+[
+  {
+    "featureOwner": "Orders",
+    "component": "Offer.jsx",
+    "path": "src/components/Orders/Offer.jsx",
+    "line": 10,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Offer.jsx",
+    "path": "src/components/Orders/Offer.jsx",
+    "line": 21,
+    "type": "api_call",
+    "description": "Fetch drive data with GET request",
+    "code": "await appFetch(`drive/get/`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Offer.jsx",
+    "path": "src/components/Orders/Offer.jsx",
+    "line": 29,
+    "type": "api_call",
+    "description": "Fetch drive/now data with body",
+    "code": "await appFetch('drive/now', { method: 'GET', body: { u_a_role: 2 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Offer.jsx",
+    "path": "src/components/Orders/Offer.jsx",
+    "line": 38,
+    "type": "api_call",
+    "description": "Fetch all drive data",
+    "code": "await appFetch('/drive', { method: 'GET', body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Orders.jsx",
+    "path": "src/components/Orders/Orders.jsx",
+    "line": 12,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Orders.jsx",
+    "path": "src/components/Orders/Orders.jsx",
+    "line": 42,
+    "type": "api_call",
+    "description": "Fetch orders data",
+    "code": "await appFetch('/drive', { method: 'GET', body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Allorders.jsx",
+    "path": "src/components/Orders/Allorders.jsx",
+    "line": 15,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Allorders.jsx",
+    "path": "src/components/Orders/Allorders.jsx",
+    "line": 53,
+    "type": "api_call",
+    "description": "Fetch user order requests",
+    "code": "await appFetch('/drive', { method: 'GET', body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Allorders.jsx",
+    "path": "src/components/Orders/Allorders.jsx",
+    "line": 95,
+    "type": "api_call",
+    "description": "Fetch drive/now data",
+    "code": "await appFetch('drive/now', { method: 'GET', body: { u_a_role: 2 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "Allorders.jsx",
+    "path": "src/components/Orders/Allorders.jsx",
+    "line": 98,
+    "type": "api_call",
+    "description": "Fetch all drive data",
+    "code": "await appFetch('/drive', { method: 'GET', body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "MyOrder.jsx",
+    "path": "src/components/Orders/MyOrder.jsx",
+    "line": 15,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "MyOrder.jsx",
+    "path": "src/components/Orders/MyOrder.jsx",
+    "line": 46,
+    "type": "api_call",
+    "description": "Fetch drive data",
+    "code": "await appFetch(`drive/get/`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "MyOrder.jsx",
+    "path": "src/components/Orders/MyOrder.jsx",
+    "line": 54,
+    "type": "api_call",
+    "description": "Fetch drive/now data",
+    "code": "await appFetch('drive/now', { method: 'GET', body: { u_a_role: 2 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "MyOrder.jsx",
+    "path": "src/components/Orders/MyOrder.jsx",
+    "line": 63,
+    "type": "api_call",
+    "description": "Fetch all drive data",
+    "code": "await appFetch('/drive', { method: 'GET', body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "OrderRowOffer.jsx",
+    "path": "src/components/Orders/OrderRowOffer.jsx",
+    "line": 8,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "OrderRowOffer.jsx",
+    "path": "src/components/Orders/OrderRowOffer.jsx",
+    "line": 30,
+    "type": "fetch_call",
+    "description": "Direct fetch call to external API",
+    "code": "fetch(`https://ibronevik.ru/taxi/api/v1/dropbox/file/${id}`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Orders",
+    "component": "OrderRowOffer.jsx",
+    "path": "src/components/Orders/OrderRowOffer.jsx",
+    "line": 134,
+    "type": "api_call",
+    "description": "Fetch drive data by booking ID",
+    "code": "await appFetch(`/drive/get/${b_id}`, { method: 'GET' })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "applications.jsx",
+    "path": "src/components/Applications/applications.jsx",
+    "line": 12,
+    "type": "service_import",
+    "description": "Import getMasterOrders service",
+    "code": "import { getMasterOrders } from '../../services/order.service';"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "applications.jsx",
+    "path": "src/components/Applications/applications.jsx",
+    "line": 32,
+    "type": "service_call",
+    "description": "Use getMasterOrders service hook",
+    "code": "const orders = useService(getMasterOrders, []);"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 1,
+    "type": "import",
+    "description": "Import appFetch utility",
+    "code": "import appFetch from '../utilities/appFetch';"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 5,
+    "type": "api_call",
+    "description": "Fetch drive data for master orders",
+    "code": "appFetch('/drive', { body: { u_a_role: 2, lc: 99999999999999999 } })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 11,
+    "type": "api_call",
+    "description": "Fetch archive drive data",
+    "code": "appFetch('drive/archive', { body: { lc: 99999999999999 } })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 73,
+    "type": "api_call",
+    "description": "Create new order",
+    "code": "appFetch('submission/order', { method: 'POST', body: JSON.stringify(payload) })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 78,
+    "type": "api_call",
+    "description": "Update order status",
+    "code": "appFetch('submission/order/' + id, { method: 'PATCH', body: JSON.stringify({ status: payload }) })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 85,
+    "type": "api_call",
+    "description": "Update order status from client",
+    "code": "appFetch(`submission/finish-order/${id}?status=${payload}`, { method: 'PATCH' })"
+  },
+  {
+    "featureOwner": "Applications",
+    "component": "order.service.js",
+    "path": "src/services/order.service.js",
+    "line": 96,
+    "type": "api_call",
+    "description": "Cancel master response",
+    "code": "appFetch(`/drive/get/${bookingId}`, { method: 'POST', body: { u_a_role: 2, action: 'set_cancel_state' } })"
+  }
+]
