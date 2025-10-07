@@ -1,82 +1,41 @@
-import { getToken } from './token.service';
-import appFetch, { BASE_URL } from '../utilities/appFetch';
-// Функция для отправки кода на email
-//~ const sendEmailCodeTest = () => {
-  //~ // Имитация запроса для отправки email кода
-  //~ return new Promise((resolve) => {
-    //~ setTimeout(() => {
-      //~ resolve({
-        //~ result: 'Success!',
-        //~ message: 'Email code sent successfully!',
-      //~ });
-    //~ }, 500); // Имитация задержки сети
-  //~ });
-//~ };
+import {
+  sendEmailVerification as apiSendEmailVerification,
+  verifyEmailCode as apiVerifyEmailCode,
+  sendPhoneCode as apiSendPhoneCode,
+  verifyPhoneCode as apiVerifyPhoneCode
+} from '../shared/api/modules/verification';
 
-// Функция для проверки email кода
-//~ const sendEmailVerificationCodeTest = (code) => {
-  //~ // Имитация запроса для проверки email кода
-  //~ return new Promise((resolve) => {
-    //~ setTimeout(() => {
-      //~ resolve({
-        //~ result: 'Success!',
-        //~ user_id: 6,
-        //~ email_verified: true,
-      //~ });
-    //~ }, 500); // Имитация задержки сети
-  //~ });
-//~ };
+const sendEmailCode = async () => {
+  const result = await apiSendEmailVerification();
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Send email code failed');
+  }
+  return result.data;
+};
 
-// Функция для отправки кода на телефон
-//~ const sendPhoneCodeTest = () => {
-  //~ // Имитация запроса для отправки телефонного кода
-  //~ return new Promise((resolve) => {
-    //~ setTimeout(() => {
-      //~ resolve({
-        //~ result: 'Success!',
-        //~ message: 'Phone code sent successfully!',
-      //~ });
-    //~ }, 500); // Имитация задержки сети
-  //~ });
-//~ };
+const sendEmailVerificationCode = async (code) => {
+  const result = await apiVerifyEmailCode(code);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Verify email code failed');
+  }
+  return result.data;
+};
 
-// Функция для проверки телефонного кода
-//~ const sendPhoneVerificationCodeTest = (code) => {
-  //~ // Имитация запроса для проверки телефонного кода
-  //~ return new Promise((resolve) => {
-    //~ setTimeout(() => {
-      //~ resolve({
-        //~ result: 'Success!',
-        //~ user_id: 6,
-        //~ phone_verified: true,
-      //~ });
-    //~ }, 500); // Имитация задержки сети
-  //~ });
-//~ };
+const sendPhoneCode = async () => {
+  const result = await apiSendPhoneCode();
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Send phone code failed');
+  }
+  return result.data;
+};
 
-const sendEmailCode = () =>
-  appFetch('email/verification/start', { method: 'POST' });
-
-const sendEmailVerificationCode = (code) =>
-  fetch(BASE_URL + `email/verification/complete?ev_hash=${code}`).then((res) =>
-    res.json(),
-  );
-
-const sendPhoneCode = () =>
-  fetch(BASE_URL + 'user/send-phone-code', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + getToken()?.access_token,
-    },
-  }).then((res) => res.json());
-
-const sendPhoneVerificationCode = (code) =>
-  fetch(BASE_URL + 'user/verify-phone/' + code, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + getToken()?.access_token,
-    },
-  }).then((res) => res.json());
+const sendPhoneVerificationCode = async (code) => {
+  const result = await apiVerifyPhoneCode(code);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Verify phone code failed');
+  }
+  return result.data;
+};
 
 export {
   sendEmailCode,

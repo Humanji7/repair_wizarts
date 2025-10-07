@@ -17,7 +17,7 @@ import {
   recoverPasswordSend,
   recoverPasswordVerify,
 } from '../../services/user.service';
-import appFetch from '../../utilities/appFetch';
+import { api } from '../../shared/api/client';
 
 const RecoveryState = {
   IDLE: 0,
@@ -177,27 +177,23 @@ function AuthLogin() {
 
     try {
       const response = await login(value, password, type);
-      const userProfile = await appFetch('user/authorized/car', {
-        body: {
-          u_hash: response.data.u_hash,
-          token: response.data.token,
-        },
+      const userProfile = await api.post('user/authorized/car', {
+        u_hash: response.u_hash,
+        token: response.access_token,
       });
-      console.log(response);
-      if (response.code === '404')
-        return setError('Не правильный номер телефона или пароль');
+
       if (keep) {
         keepUserAuthorized(true);
       } else {
         keepUserAuthorized(false);
       }
-      console.log(userProfile);
+
       setToken({
-        hash: response.data.u_hash,
-        token: response.data.token,
+        hash: response.u_hash,
+        token: response.access_token,
         user: {
           ...response.auth_user,
-          c_id: Object.values(userProfile.data.car || {})[0].c_id,
+          c_id: Object.values(userProfile.data.car || {})[0]?.c_id,
         },
       });
       dispatch(fetchUser());

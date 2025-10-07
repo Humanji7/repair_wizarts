@@ -1,0 +1,636 @@
+{
+  "batch_migration_plan": [
+    {
+      "batch": "mass",
+      "description": "High-volume business logic: orders, requests, offers, feedbacks",
+      "priority": 2,
+      "estimated_duration": "2-3 weeks",
+      "modules_to_create": [
+        "shared/api/modules/orders.module.ts",
+        "shared/api/modules/requests.module.ts",
+        "shared/api/modules/offers.module.ts",
+        "shared/api/modules/feedbacks.module.ts",
+        "shared/api/modules/submissions.module.ts"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "module": "shared/api/modules/orders.module.ts",
+          "description": "Create orders management module",
+          "functions": [
+            "getOrders(filters: OrderFilters): Promise<PaginatedOrders>",
+            "getOrderById(orderId: string): Promise<Order>",
+            "createOrder(orderData: CreateOrderRequest): Promise<Order>",
+            "updateOrder(orderId: string, updates: UpdateOrderRequest): Promise<Order>",
+            "deleteOrder(orderId: string): Promise<void>",
+            "changeOrderStatus(orderId: string, status: OrderStatus): Promise<Order>",
+            "getOrderHistory(orderId: string): Promise<OrderHistory[]>"
+          ],
+          "callers": [
+            "src/pages/Orders/OrdersList.jsx",
+            "src/pages/Orders/OrderDetail.jsx",
+            "src/pages/Orders/AllOrders.jsx",
+            "src/pages/Orders/MyOrdersMaster.jsx",
+            "src/components/Orders/OrderRow.jsx",
+            "src/components/Orders/OrderTable.jsx",
+            "src/hooks/useOrders.js",
+            "src/services/order.service.js"
+          ],
+          "removals": [
+            "appFetch calls in Orders components",
+            "order.service.js legacy methods",
+            "direct API calls in hooks",
+            "legacy order filtering logic"
+          ],
+          "dto": [
+            "types/orders.ts: Order, OrderFilters, OrderStatus, PaginatedOrders",
+            "types/orders.ts: CreateOrderRequest, UpdateOrderRequest, OrderHistory",
+            "forms/orders.ts: OrderFormData, OrderFiltersForm"
+          ],
+          "smoke": "1. Открыть страницу заказов\n2. Проверить загрузку списка заказов\n3. Отфильтровать заказы по статусу\n4. Открыть детальную страницу заказа\n5. Изменить статус заказа\n6. Создать новый заказ\n7. Обновить существующий заказ\n8. Удалить заказ"
+        },
+        {
+          "step": 2,
+          "module": "shared/api/modules/requests.module.ts",
+          "description": "Create requests management module",
+          "functions": [
+            "getRequests(filters: RequestFilters): Promise<PaginatedRequests>",
+            "getRequestById(requestId: string): Promise<Request>",
+            "createRequest(requestData: CreateRequestRequest): Promise<Request>",
+            "updateRequest(requestId: string, updates: UpdateRequestRequest): Promise<Request>",
+            "assignRequest(requestId: string, assigneeId: string): Promise<Request>",
+            "getRequestStatus(requestId: string): Promise<RequestStatus>"
+          ],
+          "callers": [
+            "src/pages/Requests/RequestsList.jsx",
+            "src/pages/Requests/RequestDetail.jsx",
+            "src/components/Requests/RequestCard.jsx",
+            "src/hooks/useRequests.js",
+            "src/services/request.service.js"
+          ],
+          "removals": [
+            "appFetch('/requests') calls",
+            "request.service.js methods",
+            "legacy request assignment logic",
+            "direct status updates"
+          ],
+          "dto": [
+            "types/requests.ts: Request, RequestFilters, RequestStatus, PaginatedRequests",
+            "types/requests.ts: CreateRequestRequest, UpdateRequestRequest",
+            "forms/requests.ts: RequestFormData, RequestFiltersForm"
+          ],
+          "smoke": "1. Открыть список заявок\n2. Проверить фильтрацию по статусам\n3. Создать новую заявку\n4. Назначить исполнителя\n5. Обновить статус заявки\n6. Проверить историю изменений"
+        },
+        {
+          "step": 3,
+          "module": "shared/api/modules/offers.module.ts",
+          "description": "Create offers management module",
+          "functions": [
+            "getOffers(filters: OfferFilters): Promise<PaginatedOffers>",
+            "getOfferById(offerId: string): Promise<Offer>",
+            "createOffer(offerData: CreateOfferRequest): Promise<Offer>",
+            "updateOffer(offerId: string, updates: UpdateOfferRequest): Promise<Offer>",
+            "acceptOffer(offerId: string): Promise<Offer>",
+            "rejectOffer(offerId: string, reason?: string): Promise<Offer>",
+            "getOffersByRequestId(requestId: string): Promise<Offer[]>"
+          ],
+          "callers": [
+            "src/components/Orders/Offer.jsx",
+            "src/components/Orders/OfferList.jsx",
+            "src/components/Orders/OfferCard.jsx",
+            "src/services/offer.service.js",
+            "src/hooks/useOffers.js"
+          ],
+          "removals": [
+            "appFetch('submission/offers') calls",
+            "offer.service.js legacy methods",
+            "direct offer manipulation",
+            "legacy offer status updates"
+          ],
+          "dto": [
+            "types/offers.ts: Offer, OfferFilters, OfferStatus, PaginatedOffers",
+            "types/offers.ts: CreateOfferRequest, UpdateOfferRequest",
+            "forms/offers.ts: OfferFormData"
+          ],
+          "smoke": "1. Открыть страницу заказа\n2. Просмотреть список предложений\n3. Создать новое предложение\n4. Принять предложение\n5. Отклонить предложение\n6. Проверить обновление статуса заказа"
+        },
+        {
+          "step": 4,
+          "module": "shared/api/modules/feedbacks.module.ts",
+          "description": "Create feedbacks management module",
+          "functions": [
+            "getFeedbacks(filters: FeedbackFilters): Promise<PaginatedFeedbacks>",
+            "getFeedbackById(feedbackId: string): Promise<Feedback>",
+            "createFeedback(feedbackData: CreateFeedbackRequest): Promise<Feedback>",
+            "updateFeedback(feedbackId: string, updates: UpdateFeedbackRequest): Promise<Feedback>",
+            "deleteFeedback(feedbackId: string): Promise<void>",
+            "getFeedbacksByOrderId(orderId: string): Promise<Feedback[]>"
+          ],
+          "callers": [
+            "src/pages/Feedbacks/FeedbackList.jsx",
+            "src/components/Feedbacks/FeedbackCard.jsx",
+            "src/components/Feedbacks/FeedbackForm.jsx",
+            "src/services/feedback.service.js",
+            "src/hooks/useFeedbacks.js"
+          ],
+          "removals": [
+            "appFetch('/feedbacks') calls",
+            "feedback.service.js methods",
+            "legacy feedback submission",
+            "direct feedback API calls"
+          ],
+          "dto": [
+            "types/feedbacks.ts: Feedback, FeedbackFilters, PaginatedFeedbacks",
+            "types/feedbacks.ts: CreateFeedbackRequest, UpdateFeedbackRequest",
+            "forms/feedbacks.ts: FeedbackFormData"
+          ],
+          "smoke": "1. Открыть страницу отзывов\n2. Оставить новый отзыв\n3. Отредактировать существующий отзыв\n4. Удалить отзыв\n5. Проверить фильтрацию отзывов\n6. Проверить отображение отзывов в заказе"
+        },
+        {
+          "step": 5,
+          "module": "shared/api/modules/submissions.module.ts",
+          "description": "Create submissions management module",
+          "functions": [
+            "getSubmissions(filters: SubmissionFilters): Promise<PaginatedSubmissions>",
+            "getSubmissionById(submissionId: string): Promise<Submission>",
+            "createSubmission(submissionData: CreateSubmissionRequest): Promise<Submission>",
+            "updateSubmission(submissionId: string, updates: UpdateSubmissionRequest): Promise<Submission>",
+            "getSubmissionsByRequestId(requestId: string): Promise<Submission[]>"
+          ],
+          "callers": [
+            "src/pages/Submissions/SubmissionList.jsx",
+            "src/components/Submissions/SubmissionCard.jsx",
+            "src/hooks/useSubmissions.js"
+          ],
+          "removals": [
+            "appFetch('/submissions') calls",
+            "legacy submission handling",
+            "direct submission API calls"
+          ],
+          "dto": [
+            "types/submissions.ts: Submission, SubmissionFilters, PaginatedSubmissions",
+            "types/submissions.ts: CreateSubmissionRequest, UpdateSubmissionRequest"
+          ],
+          "smoke": "1. Создать заявку\n2. Добавить submission к заявке\n3. Обновить submission\n4. Проверить отображение в заявке"
+        },
+        {
+          "step": 6,
+          "module": "shared/api/modules/drive.module.ts",
+          "description": "Create drive/data access module",
+          "functions": [
+            "getDriveData(params: DriveParams): Promise<DriveData>",
+            "getDriveArchive(params: DriveArchiveParams): Promise<DriveArchive>",
+            "getDriveNow(params: DriveNowParams): Promise<DriveData>",
+            "getDriveStats(): Promise<DriveStats>"
+          ],
+          "callers": [
+            "src/components/Orders/Offer.jsx",
+            "src/components/Orders/OrderRowOffer.jsx",
+            "src/hooks/useDrive.js"
+          ],
+          "removals": [
+            "appFetch('/drive') calls",
+            "appFetch('drive/now') calls",
+            "appFetch('drive/archive') calls",
+            "legacy drive data access"
+          ],
+          "dto": [
+            "types/drive.ts: DriveData, DriveParams, DriveArchive, DriveStats",
+            "types/drive.ts: DriveArchiveParams, DriveNowParams"
+          ],
+          "smoke": "1. Открыть страницу заказа\n2. Проверить загрузку drive данных\n3. Проверить архивную информацию\n4. Проверить текущее состояние"
+        }
+      ],
+      "risks": [
+        {
+          "risk": "Complex business logic in order status transitions",
+          "probability": "High",
+          "impact": "Critical",
+          "mitigation": "Preserve existing order flow logic, add comprehensive state machine tests"
+        },
+        {
+          "risk": "High volume of concurrent order operations",
+          "probability": "Medium",
+          "impact": "High",
+          "mitigation": "Implement proper queuing and locking mechanisms"
+        },
+        {
+          "risk": "Legacy data format inconsistencies",
+          "probability": "Medium",
+          "impact": "Medium",
+          "mitigation": "Create data migration scripts and validation utilities"
+        },
+        {
+          "risk": "Dependencies between orders and offers",
+          "probability": "High",
+          "impact": "Medium",
+          "mitigation": "Coordinate offers migration with orders, maintain backward compatibility"
+        }
+      ],
+      "fallback": {
+        "strategy": "Feature flag based gradual rollout",
+        "triggers": [
+          "Order creation failures > 5%",
+          "Performance degradation > 20%",
+          "Critical business logic errors",
+          "Data consistency issues"
+        ],
+        "steps": [
+          "Disable new modules via feature flags",
+          "Switch back to legacy appFetch calls",
+          "Rollback database schema changes if any",
+          "Notify users of temporary issues",
+          "Investigate root cause and fix"
+        ],
+        "rollback_duration": "5-10 minutes"
+      }
+    },
+    {
+      "batch": "legacy",
+      "description": "Low priority and legacy features: services, articles, reviews, chat, location",
+      "priority": 3,
+      "estimated_duration": "3-4 weeks",
+      "modules_to_create": [
+        "shared/api/modules/services.module.ts",
+        "shared/api/modules/articles.module.ts",
+        "shared/api/modules/reviews.module.ts",
+        "shared/api/modules/chat.module.ts",
+        "shared/api/modules/location.module.ts",
+        "shared/api/modules/notifications.module.ts",
+        "shared/api/modules/files.module.ts"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "module": "shared/api/modules/services.module.ts",
+          "description": "Create services catalog module",
+          "functions": [
+            "getServices(filters: ServiceFilters): Promise<PaginatedServices>",
+            "getServiceById(serviceId: string): Promise<Service>",
+            "getServicesByCategory(categoryId: string): Promise<Service[]>",
+            "getServicesByMaster(masterId: string): Promise<Service[]>",
+            "createService(serviceData: CreateServiceRequest): Promise<Service>",
+            "updateService(serviceId: string, updates: UpdateServiceRequest): Promise<Service>",
+            "deleteService(serviceId: string): Promise<void>"
+          ],
+          "callers": [
+            "src/pages/Services/ServicesList.jsx",
+            "src/pages/Services/ServiceDetail.jsx",
+            "src/components/Services/ServiceCard.jsx",
+            "src/pages/Catalog/Catalog.jsx",
+            "src/services/service.service.js",
+            "src/hooks/useServices.js"
+          ],
+          "removals": [
+            "appFetch('/services') calls",
+            "service.service.js legacy methods",
+            "direct catalog API calls",
+            "legacy service filtering"
+          ],
+          "dto": [
+            "types/services.ts: Service, ServiceFilters, ServiceCategory, PaginatedServices",
+            "types/services.ts: CreateServiceRequest, UpdateServiceRequest",
+            "forms/services.ts: ServiceFormData"
+          ],
+          "smoke": "1. Открыть каталог услуг\n2. Отфильтровать услуги по категории\n3. Открыть детальную страницу услуги\n4. Проверить услуги мастера\n5. Создать новую услугу (admin)\n6. Обновить описание услуги"
+        },
+        {
+          "step": 2,
+          "module": "shared/api/modules/articles.module.ts",
+          "description": "Create articles/knowledge base module",
+          "functions": [
+            "getArticles(filters: ArticleFilters): Promise<PaginatedArticles>",
+            "getArticleById(articleId: string): Promise<Article>",
+            "getArticlesByCategory(categoryId: string): Promise<Article[]>",
+            "createArticle(articleData: CreateArticleRequest): Promise<Article>",
+            "updateArticle(articleId: string, updates: UpdateArticleRequest): Promise<Article>",
+            "deleteArticle(articleId: string): Promise<void>",
+            "searchArticles(query: string): Promise<Article[]>"
+          ],
+          "callers": [
+            "src/pages/Articles/ArticlesList.jsx",
+            "src/pages/Articles/ArticleDetail.jsx",
+            "src/components/Articles/ArticleCard.jsx",
+            "src/pages/Help/HelpCenter.jsx",
+            "src/services/article.service.js"
+          ],
+          "removals": [
+            "appFetch('/articles') calls",
+            "article.service.js methods",
+            "legacy search functionality",
+            "direct article API calls"
+          ],
+          "dto": [
+            "types/articles.ts: Article, ArticleFilters, ArticleCategory, PaginatedArticles",
+            "types/articles.ts: CreateArticleRequest, UpdateArticleRequest",
+            "forms/articles.ts: ArticleFormData"
+          ],
+          "smoke": "1. Открыть базу знаний\n2. Поискать статью\n3. Открыть детальную страницу\n4. Проверить категории статей\n5. Создать новую статью"
+        },
+        {
+          "step": 3,
+          "module": "shared/api/modules/reviews.module.ts",
+          "description": "Create reviews module",
+          "functions": [
+            "getReviews(filters: ReviewFilters): Promise<PaginatedReviews>",
+            "getReviewById(reviewId: string): Promise<Review>",
+            "createReview(reviewData: CreateReviewRequest): Promise<Review>",
+            "updateReview(reviewId: string, updates: UpdateReviewRequest): Promise<Review>",
+            "deleteReview(reviewId: string): Promise<void>",
+            "getReviewsByMaster(masterId: string): Promise<Review[]>"
+          ],
+          "callers": [
+            "src/pages/Reviews/ReviewsList.jsx",
+            "src/components/Reviews/ReviewCard.jsx",
+            "src/components/Reviews/ReviewForm.jsx",
+            "src/services/review.service.js",
+            "src/hooks/useReviews.js"
+          ],
+          "removals": [
+            "appFetch('/reviews') calls",
+            "review.service.js legacy methods",
+            "legacy review submission",
+            "direct review API calls"
+          ],
+          "dto": [
+            "types/reviews.ts: Review, ReviewFilters, ReviewRating, PaginatedReviews",
+            "types/reviews.ts: CreateReviewRequest, UpdateReviewRequest",
+            "forms/reviews.ts: ReviewFormData"
+          ],
+          "smoke": "1. Открыть страницу отзывов\n2. Оставить отзыв\n3. Отредактировать отзыв\n4. Удалить отзыв\n5. Проверить отзывы мастера"
+        },
+        {
+          "step": 4,
+          "module": "shared/api/modules/chat.module.ts",
+          "description": "Create chat/messaging module",
+          "functions": [
+            "getConversations(): Promise<Conversation[]>",
+            "getMessages(conversationId: string, filters: MessageFilters): Promise<PaginatedMessages>",
+            "sendMessage(conversationId: string, message: SendMessageRequest): Promise<Message>",
+            "markMessagesRead(conversationId: string, messageIds: string[]): Promise<void>",
+            "createConversation(participantIds: string[]): Promise<Conversation>",
+            "deleteConversation(conversationId: string): Promise<void>"
+          ],
+          "callers": [
+            "src/pages/Chat/ChatList.jsx",
+            "src/pages/Chat/Conversation.jsx",
+            "src/components/Chat/MessageList.jsx",
+            "src/components/Chat/MessageInput.jsx",
+            "src/services/dialog.service.js",
+            "src/hooks/useChat.js"
+          ],
+          "removals": [
+            "appFetch('/chat') calls",
+            "dialog.service.js legacy methods",
+            "WebSocket direct connections",
+            "legacy message handling"
+          ],
+          "dto": [
+            "types/chat.ts: Conversation, Message, MessageFilters, PaginatedMessages",
+            "types/chat.ts: SendMessageRequest, ConversationParticipant",
+            "forms/chat.ts: MessageFormData"
+          ],
+          "smoke": "1. Открыть список чатов\n2. Открыть диалог\n3. Отправить сообщение\n4. Проверить получение сообщения\n5. Отметить сообщения как прочитанные"
+        },
+        {
+          "step": 5,
+          "module": "shared/api/modules/location.module.ts",
+          "description": "Create location/geography module",
+          "functions": [
+            "getCities(): Promise<City[]>",
+            "getRegions(): Promise<Region[]>",
+            "getAddresses(query: string): Promise<Address[]>",
+            "validateAddress(address: Address): Promise<AddressValidation>",
+            "getCoordinates(addressId: string): Promise<Coordinates>",
+            "updateUserLocation(location: UserLocation): Promise<void>"
+          ],
+          "callers": [
+            "src/pages/Profile/LocationSettings.jsx",
+            "src/components/Location/AddressForm.jsx",
+            "src/components/Location/CitySelector.jsx",
+            "src/hooks/useLocation.js"
+          ],
+          "removals": [
+            "appFetch('/location') calls",
+            "legacy geocoding calls",
+            "direct address validation",
+            "location service.js"
+          ],
+          "dto": [
+            "types/location.ts: City, Region, Address, Coordinates, UserLocation",
+            "types/location.ts: AddressValidation, LocationFilters",
+            "forms/location.ts: AddressFormData"
+          ],
+          "smoke": "1. Открыть настройки профиля\n2. Изменить город\n3. Ввести адрес\n4. Проверить валидацию адреса\n5. Сохранить местоположение"
+        },
+        {
+          "step": 6,
+          "module": "shared/api/modules/notifications.module.ts",
+          "description": "Create notifications module",
+          "functions": [
+            "getNotifications(filters: NotificationFilters): Promise<PaginatedNotifications>",
+            "markNotificationRead(notificationId: string): Promise<void>",
+            "markAllNotificationsRead(): Promise<void>",
+            "deleteNotification(notificationId: string): Promise<void>",
+            "subscribeToTopics(topics: string[]): Promise<void>",
+            "unsubscribeFromTopics(topics: string[]): Promise<void>"
+          ],
+          "callers": [
+            "src/pages/Notifications/NotificationCenter.jsx",
+            "src/components/Notifications/NotificationList.jsx",
+            "src/components/Header/NotificationBell.jsx",
+            "src/hooks/useNotifications.js"
+          ],
+          "removals": [
+            "appFetch('/notifications') calls",
+            "legacy notification handling",
+            "direct push API calls",
+            "notification.service.js"
+          ],
+          "dto": [
+            "types/notifications.ts: Notification, NotificationFilters, PaginatedNotifications",
+            "types/notifications.ts: NotificationTopic, NotificationSettings"
+          ],
+          "smoke": "1. Открыть центр уведомлений\n2. Проверить список уведомлений\n3. Отметить как прочитанное\n4. Удалить уведомление\n5. Проверить настройки подписок"
+        },
+        {
+          "step": 7,
+          "module": "shared/api/modules/files.module.ts",
+          "description": "Create file management module",
+          "functions": [
+            "uploadFile(file: File, metadata: FileMetadata): Promise<FileUpload>",
+            "deleteFile(fileId: string): Promise<void>",
+            "getFile(fileId: string): Promise<File>",
+            "getFiles(filters: FileFilters): Promise<PaginatedFiles>",
+            "updateFileMetadata(fileId: string, metadata: Partial<FileMetadata>): Promise<File>"
+          ],
+          "callers": [
+            "src/components/FileUpload/FileUploader.jsx",
+            "src/components/Files/FileList.jsx",
+            "src/pages/MediaLibrary.jsx",
+            "src/hooks/useFiles.js"
+          ],
+          "removals": [
+            "appFetch('/files') calls",
+            "legacy file upload logic",
+            "direct FormData submissions",
+            "file.service.js"
+          ],
+          "dto": [
+            "types/files.ts: File, FileMetadata, FileUpload, FileFilters",
+            "types/files.ts: PaginatedFiles, UploadProgress"
+          ],
+          "smoke": "1. Загрузить файл\n2. Проверить метаданные файла\n3. Скачать файл\n4. Удалить файл\n5. Поискать файлы"
+        },
+        {
+          "step": 8,
+          "module": "shared/api/modules/devices.module.ts",
+          "description": "Create devices management module",
+          "functions": [
+            "getDevices(): Promise<Device[]>",
+            "getDeviceById(deviceId: string): Promise<Device>",
+            "registerDevice(deviceData: RegisterDeviceRequest): Promise<Device>",
+            "updateDevice(deviceId: string, updates: UpdateDeviceRequest): Promise<Device>",
+            "deleteDevice(deviceId: string): Promise<void>"
+          ],
+          "callers": [
+            "src/pages/Devices/DeviceList.jsx",
+            "src/components/Devices/DeviceCard.jsx",
+            "src/pages/Profile/DeviceSettings.jsx"
+          ],
+          "removals": [
+            "appFetch('/devices') calls",
+            "legacy device management",
+            "direct device API calls"
+          ],
+          "dto": [
+            "types/devices.ts: Device, DeviceStatus, DeviceType",
+            "types/devices.ts: RegisterDeviceRequest, UpdateDeviceRequest"
+          ],
+          "smoke": "1. Открыть список устройств\n2. Добавить новое устройство\n3. Обновить устройство\n4. Удалить устройство"
+        },
+        {
+          "step": 9,
+          "module": "shared/api/modules/repairs.module.ts",
+          "description": "Create repairs management module",
+          "functions": [
+            "getRepairs(filters: RepairFilters): Promise<PaginatedRepairs>",
+            "getRepairById(repairId: string): Promise<Repair>",
+            "createRepair(repairData: CreateRepairRequest): Promise<Repair>",
+            "updateRepair(repairId: string, updates: UpdateRepairRequest): Promise<Repair>",
+            "getRepairsByMaster(masterId: string): Promise<Repair[]>"
+          ],
+          "callers": [
+            "src/pages/Repairs/RepairsList.jsx",
+            "src/components/Repairs/RepairCard.jsx",
+            "src/services/repair.service.js"
+          ],
+          "removals": [
+            "appFetch('/repairs') calls",
+            "repair.service.js methods",
+            "legacy repair management"
+          ],
+          "dto": [
+            "types/repairs.ts: Repair, RepairFilters, RepairStatus, PaginatedRepairs",
+            "types/repairs.ts: CreateRepairRequest, UpdateRepairRequest"
+          ],
+          "smoke": "1. Открыть список ремонтов\n2. Создать новый ремонт\n3. Обновить статус ремонта\n4. Проверить ремонты мастера"
+        }
+      ],
+      "risks": [
+        {
+          "risk": "Chat real-time functionality dependencies",
+          "probability": "Medium",
+          "impact": "Medium",
+          "mitigation": "Preserve WebSocket connections, migrate API calls separately"
+        },
+        {
+          "risk": "File upload handling and progress tracking",
+          "probability": "Medium",
+          "impact": "Medium",
+          "mitigation": "Maintain existing upload logic, focus on API integration"
+        },
+        {
+          "risk": "Legacy data structures and formats",
+          "probability": "High",
+          "impact": "Low",
+          "mitigation": "Create adapter layers for data transformation"
+        },
+        {
+          "risk": "External API integrations (maps, file storage)",
+          "probability": "Medium",
+          "impact": "Medium",
+          "mitigation": "Keep external integrations separate, migrate only internal API calls"
+        }
+      ],
+      "fallback": {
+        "strategy": "Module-level rollback with feature flags",
+        "triggers": [
+          "Specific module functionality failures",
+          "User complaints for particular features",
+          "Performance issues in specific areas",
+          "Data corruption in legacy systems"
+        ],
+        "steps": [
+          "Identify affected module(s)",
+          "Disable specific module via feature flags",
+          "Restore legacy calls for affected functionality",
+          "Keep other migrated modules active",
+          "Schedule fix for problematic module"
+        ],
+        "rollback_duration": "2-5 minutes per module"
+      }
+    }
+  ],
+  "overall_strategy": {
+    "coordination": {
+      "inter_batch_dependencies": [
+        "Orders batch depends on successful user profile migration",
+        "Chat batch may depend on notifications batch",
+        "Files batch needed for avatars in user/profile modules"
+      ],
+      "feature_flags": [
+        "USE_NEW_ORDERS_API",
+        "USE_NEW_SERVICES_API",
+        "USE_NEW_CHAT_API",
+        "USE_NEW_FILES_API"
+      ],
+      "monitoring": [
+        "API error rates by batch",
+        "Response time comparisons",
+        "User interaction metrics",
+        "Business KPI preservation"
+      ]
+    },
+    "validation": {
+      "pre_batch_checks": [
+        "All unit tests passing for current batch",
+        "Integration tests with existing modules",
+        "Legacy functionality still working",
+        "Performance baseline established"
+      ],
+      "post_batch_checks": [
+        "Smoke tests for all batch functionality",
+        "Regression tests with previous batches",
+        "Performance within acceptable limits",
+        "Error rates below threshold"
+      ],
+      "acceptance_criteria": [
+        "All functionality working as before",
+        "Performance equal or better",
+        "Error rates reduced",
+        "Code quality improved"
+      ]
+    },
+    "cleanup": {
+      "post_migration": [
+        "Remove all appFetch calls",
+        "Delete legacy service files",
+        "Clean up unused imports",
+        "Update documentation",
+        "Archive old API clients"
+      ],
+      "monitoring_period": "2 weeks after final batch"
+    }
+  }
+}

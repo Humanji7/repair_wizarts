@@ -1,7 +1,15 @@
 import { removeToken } from './token.service';
+import { getProfile, updateProfile, deleteAccount, updatePassword as apiUpdatePassword } from '../shared/api/modules/user';
+import { api } from '../shared/api/client';
 import appFetch from '../utilities/appFetch';
 
-const getUser = () => appFetch('user/authorized');
+const getUser = async () => {
+  const result = await getProfile();
+  if (!result.ok) {
+    throw (result.error.message || 'Get user failed');
+  }
+  return result.data;
+};
 // Method to fetch the current user data
 // const getUserTestData = () => {
 //     return new Promise((resolve) => {
@@ -24,46 +32,53 @@ const getUser = () => appFetch('user/authorized');
 //     });
 // }; ###
 
-const getUserUnreadMessages = () => appFetch('user/unread-messages');
-
-const getMasterByUsername = (username) => appFetch('user/master/' + username);
-
-const getMasterRepairs = () => appFetch('service/master-repairs');
-
-const getClientById = (id) => appFetch('user/client/' + id);
-
-const updateUser = (data, id, asAdmin) => {
-  const formattedDetails = Object.entries(data.details || {}).map(
-    ([key, value]) =>
-      value !== null || value !== undefined
-        ? ['=', [key], value]
-        : ['=', [key], []],
-  );
-  return appFetch(
-    'user',
-    {
-      body: {
-        ...(asAdmin ? { u_a_id: id } : {}),
-        data: JSON.stringify({
-          u_name: data.name,
-          u_family: data.lastname,
-          u_phone: data.phone,
-          u_email: data.email,
-          u_description: data.u_description,
-          ...(data.details ? { u_details: formattedDetails } : {}),
-        }),
-      },
-    },
-    asAdmin,
-  );
+const getUserUnreadMessages = async () => {
+  const result = await api.get('user/unread-messages');
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Get unread messages failed');
+  }
+  return result.data;
 };
-const updatePassword = (data) =>
-  appFetch('newpass', {
-    body: {
-      password: data.password,
-      new_password: data.new_password,
-    },
-  });
+
+const getMasterByUsername = async (username) => {
+  const result = await api.get('user/master/' + username);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Get master failed');
+  }
+  return result.data;
+};
+
+const getMasterRepairs = async () => {
+  const result = await api.get('service/master-repairs');
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Get master repairs failed');
+  }
+  return result.data;
+};
+
+const getClientById = async (id) => {
+  const result = await api.get('user/client/' + id);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Get client failed');
+  }
+  return result.data;
+};
+
+const updateUser = async (data, id, asAdmin) => {
+  const result = await updateProfile(data, id, asAdmin);
+  if (!result.ok) {
+    throw (result.error.message || 'Update user failed');
+  }
+  return result.data;
+};
+
+const updatePassword = async (data) => {
+  const result = await apiUpdatePassword(data);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Update password failed');
+  }
+  return result.data;
+};
 // Для клиента:
 // 				"u_role"				идентификатор роли пользователя (менять между 1,2,5)
 // 				"u_name"				имя пользователя
@@ -105,46 +120,57 @@ const updateMasterPictures = (userId, payload) => {
 };
 
 const deleteUser = async () => {
-  const result = await appFetch('user/delete-account', { method: 'DELETE' });
+  const result = await deleteAccount();
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Delete user failed');
+  }
   removeToken();
-  return result;
+  return result.data;
 };
 
-const createUserCustomService = (data) =>
-  appFetch('service/repair_type', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+const createUserCustomService = async (data) => {
+  const result = await api.post('service/repair_type', data);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Create custom service failed');
+  }
+  return result.data;
+};
 
-const updateUserService = (data, id) =>
-  appFetch('service/master-repair/' + id, {
-    method: 'PATCH',
-    body: JSON.stringify(data),
-  });
+const updateUserService = async (data, id) => {
+  const result = await api.patch('service/master-repair/' + id, data);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Update service failed');
+  }
+  return result.data;
+};
 
 const getUserMode = () => JSON.parse(localStorage.getItem('isMaster'));
 
 const setUserMode = (mode) => localStorage.setItem('isMaster', mode);
 
-const recoverPassword = (payload) =>
-  appFetch('user/recover-password', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+const recoverPassword = async (payload) => {
+  const result = await api.post('user/recover-password', payload);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Recover password failed');
+  }
+  return result.data;
+};
 
-const recoverPasswordVerify = (payload) =>
-  appFetch(
-    `user/verify-password-recovery/${payload.code}?user_id=${payload.user}`,
-    {
-      method: 'POST',
-    },
-  );
+const recoverPasswordVerify = async (payload) => {
+  const result = await api.post(`user/verify-password-recovery/${payload.code}?user_id=${payload.user}`);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Verify password recovery failed');
+  }
+  return result.data;
+};
 
-const recoverPasswordSend = (payload) =>
-  appFetch('user/change-password', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+const recoverPasswordSend = async (payload) => {
+  const result = await api.post('user/change-password', payload);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Change password failed');
+  }
+  return result.data;
+};
 
 const keepUserAuthorized = (v) =>
   localStorage.setItem('keepAuthorized', JSON.stringify(v));

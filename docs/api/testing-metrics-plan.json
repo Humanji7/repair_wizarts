@@ -1,0 +1,492 @@
+{
+  "testing_metrics_plan": {
+    "unitTests": [
+      {
+        "file": "src/shared/api/modules/auth.module.test.ts",
+        "description": "Test auth module functions (login, logout, refresh)",
+        "coverage": [
+          "login() - success/error cases",
+          "logout() - token clearing",
+          "refreshToken() - automatic refresh logic",
+          "getAuthHeaders() - header generation",
+          "handleAuthError() - error processing"
+        ],
+        "mocks": [
+          "localStorage mock",
+          "fetch mock for auth endpoints",
+          "token expiry simulation"
+        ]
+      },
+      {
+        "file": "src/shared/api/modules/user.module.test.ts",
+        "description": "Test user module functions (profile, settings, avatar)",
+        "coverage": [
+          "getUserProfile() - data fetching",
+          "updateUserProfile() - profile updates",
+          "uploadAvatar() - file upload handling",
+          "deleteAvatar() - avatar removal",
+          "getUserSettings() - settings retrieval",
+          "updateUserSettings() - settings updates"
+        ],
+        "mocks": [
+          "FormData mock for avatar upload",
+          "fetch mock for user endpoints",
+          "file reader mock"
+        ]
+      },
+      {
+        "file": "src/shared/api/modules/verification.module.test.ts",
+        "description": "Test verification module (email, phone verification)",
+        "coverage": [
+          "sendEmailVerification() - email sending",
+          "verifyEmail() - email verification",
+          "sendPhoneVerification() - SMS sending",
+          "verifyPhone() - SMS code verification",
+          "handleVerificationError() - error handling"
+        ],
+        "mocks": [
+          "fetch mock for verification endpoints",
+          "SMS service mock",
+          "email service mock"
+        ]
+      },
+      {
+        "file": "src/shared/api/modules/finance.module.test.ts",
+        "description": "Test finance module (balance, transactions)",
+        "coverage": [
+          "getBalance() - balance retrieval",
+          "getTransactions() - transaction history",
+          "getTransactionDetails() - transaction details",
+          "processFinanceOperation() - financial operations"
+        ],
+        "mocks": [
+          "fetch mock for finance endpoints",
+          "currency formatting mock",
+          "pagination mock"
+        ]
+      },
+      {
+        "file": "src/shared/api/config.test.ts",
+        "description": "Test configuration management",
+        "coverage": [
+          "getConfigValue() - environment variable retrieval",
+          "getApiUrl() - URL construction",
+          "getApiTimeout() - timeout configuration",
+          "isDevelopmentMode() - environment detection"
+        ],
+        "mocks": [
+          "process.env mock",
+          "window.location mock"
+        ]
+      },
+      {
+        "file": "src/shared/api/client.test.ts",
+        "description": "Test API client with interceptors",
+        "coverage": [
+          "apiClient.get() - GET requests",
+          "apiClient.post() - POST requests",
+          "apiClient.patch() - PATCH requests",
+          "request interceptor - auth headers",
+          "response interceptor - error handling",
+          "retry logic - network failures"
+        ],
+        "mocks": [
+          "axios mock",
+          "retry mechanism mock",
+          "abort controller mock"
+        ]
+      },
+      {
+        "file": "src/shared/api/auth.test.ts",
+        "description": "Test authentication utilities",
+        "coverage": [
+          "getAuthHeaders() - header generation",
+          "isTokenExpired() - token validation",
+          "refreshAccessToken() - token refresh",
+          "clearAuthData() - data cleanup"
+        ],
+        "mocks": [
+          "localStorage mock",
+          "JWT decode mock",
+          "date mock for token expiry"
+        ]
+      },
+      {
+        "file": "src/services/token.service.test.ts",
+        "description": "Test token service migration",
+        "coverage": [
+          "getToken() - token retrieval",
+          "setToken() - token storage",
+          "updateToken() - token updates",
+          "removeToken() - token removal",
+          "isTokenValid() - token validation"
+        ],
+        "mocks": [
+          "localStorage mock",
+          "legacy userdata format mock"
+        ]
+      }
+    ],
+    "integrationTests": [
+      {
+        "file": "src/shared/api/integration/auth-flow.test.ts",
+        "description": "Test complete authentication flow",
+        "scenarios": [
+          "Login → profile loading → token refresh → logout",
+          "Expired token handling",
+          "Multiple tab login sync",
+          "Session persistence"
+        ],
+        "setup": [
+          "Mock server with auth endpoints",
+          "Test user credentials",
+          "Token expiry simulation"
+        ]
+      },
+      {
+        "file": "src/shared/api/integration/user-profile.test.ts",
+        "description": "Test user profile operations",
+        "scenarios": [
+          "Profile load → edit → save → verify",
+          "Avatar upload → display → delete",
+          "Settings load → modify → save → reload"
+        ],
+        "setup": [
+          "Mock user endpoints",
+          "Test user data",
+          "File upload simulation"
+        ]
+      },
+      {
+        "file": "src/shared/api/integration/verification-flow.test.ts",
+        "description": "Test verification processes",
+        "scenarios": [
+          "Email verification flow",
+          "Phone verification flow",
+          "Resend verification logic",
+          "Rate limiting behavior"
+        ],
+        "setup": [
+          "Mock verification endpoints",
+          "Test email/phone data",
+          "SMS/email service simulation"
+        ]
+      },
+      {
+        "file": "src/shared/api/integration/error-handling.test.ts",
+        "description": "Test error handling and retry logic",
+        "scenarios": [
+          "Network timeout and retry",
+          "401 unauthorized handling",
+          "403 forbidden handling",
+          "500 server error handling",
+          "Offline mode behavior"
+        ],
+        "setup": [
+          "Mock error responses",
+          "Network failure simulation",
+          "Retry configuration"
+        ]
+      },
+      {
+        "file": "src/shared/api/integration/concurrent-requests.test.ts",
+        "description": "Test concurrent request handling",
+        "scenarios": [
+          "Multiple simultaneous requests",
+          "Token refresh race conditions",
+          "Request queuing during refresh",
+          "Request cancellation"
+        ],
+        "setup": [
+          "Parallel request simulation",
+          "Token expiry timing",
+          "Request interceptor testing"
+        ]
+      }
+    ],
+    "mockUtilities": [
+      {
+        "file": "src/shared/api/__mocks__/server.ts",
+        "description": "Mock server setup for API testing",
+        "handlers": [
+          "auth endpoints mock handlers",
+          "user endpoints mock handlers",
+          "verification endpoints mock handlers",
+          "finance endpoints mock handlers"
+        ],
+        "utilities": [
+          "setupMockServer() - server initialization",
+          "resetMockHandlers() - handler cleanup",
+          "createMockResponse() - response builder"
+        ]
+      },
+      {
+        "file": "src/shared/api/__mocks__/fetch.ts",
+        "description": "Fetch API mocking utilities",
+        "mocks": [
+          "global.fetch mock",
+          "Request/Response constructors",
+          "AbortController mock",
+          "Headers mock"
+        ],
+        "utilities": [
+          "mockFetchResponse() - response builder",
+          "mockFetchError() - error simulation",
+          "captureFetchCalls() - call tracking"
+        ]
+      },
+      {
+        "file": "src/shared/api/__mocks__/localStorage.ts",
+        "description": "localStorage mocking for auth tests",
+        "mocks": [
+          "localStorage.setItem/getItem/removeItem",
+          "sessionStorage equivalents",
+          "Storage event simulation"
+        ],
+        "utilities": [
+          "clearMockStorage() - storage cleanup",
+          "getMockStorageData() - data inspection",
+          "simulateStorageEvent() - event testing"
+        ]
+      }
+    ],
+    "commands": {
+      "preMigration": [
+        {
+          "command": "npm run test:unit -- --coverage --testPathPattern=shared/api",
+          "description": "Run unit tests for shared/api with coverage",
+          "expected": "90%+ coverage on all modules"
+        },
+        {
+          "command": "npm run test:integration -- --testPathPattern=shared/api",
+          "description": "Run integration tests for API modules",
+          "expected": "All integration tests passing"
+        },
+        {
+          "command": "npm run typecheck",
+          "description": "TypeScript type checking",
+          "expected": "No TypeScript errors"
+        },
+        {
+          "command": "npx knip",
+          "description": "Check for unused files and dependencies",
+          "expected": "No critical unused dependencies"
+        },
+        {
+          "command": "npm run build",
+          "description": "Build application",
+          "expected": "Successful build without errors"
+        },
+        {
+          "command": "npm run test:e2e -- --spec='auth/**/*.spec.ts'",
+          "description": "Run e2e tests for auth flows",
+          "expected": "All critical auth tests passing"
+        }
+      ],
+      "postMigration": [
+        {
+          "command": "npm run test:unit -- --coverage --testPathPattern=shared/api",
+          "description": "Verify unit tests still pass after migration",
+          "expected": "Same or better coverage"
+        },
+        {
+          "command": "npm run test:integration -- --testPathPattern=shared/api",
+          "description": "Verify integration tests after migration",
+          "expected": "All tests passing"
+        },
+        {
+          "command": "npm run test:regression -- --testPathPattern=migration",
+          "description": "Run regression tests for migrated functionality",
+          "expected": "No regressions detected"
+        },
+        {
+          "command": "npm run typecheck",
+          "description": "Final type checking",
+          "expected": "No TypeScript errors"
+        },
+        {
+          "command": "npx knip",
+          "description": "Check for unused code after migration",
+          "expected": "Legacy code marked as unused"
+        },
+        {
+          "command": "npm run build",
+          "description": "Verify build after migration",
+          "expected": "Successful build"
+        }
+      ],
+      "validation": [
+        {
+          "command": "npm run test:smoke -- --env=production",
+          "description": "Run smoke tests in production-like environment",
+          "expected": "All critical paths working"
+        },
+        {
+          "command": "npm run test:performance -- --analyzeBundle",
+          "description": "Performance and bundle analysis",
+          "expected": "No significant bundle size increase"
+        }
+      ]
+    },
+    "metrics": {
+      "preMigration": [
+        {
+          "metric": "bundle_size",
+          "command": "npm run build:analyze",
+          "file": "build/static/js/*.js",
+          "measurement": "Total bundle size in KB",
+          "baseline": "Current production bundle size"
+        },
+        {
+          "metric": "test_coverage",
+          "command": "npm run test:coverage -- --json",
+          "file": "coverage/coverage-final.json",
+          "measurement": "Coverage percentage for API modules",
+          "baseline": "Current coverage levels"
+        },
+        {
+          "metric": "build_time",
+          "command": "time npm run build",
+          "file": "build.log",
+          "measurement": "Build duration in seconds",
+          "baseline": "Current build time"
+        },
+        {
+          "metric": "type_errors",
+          "command": "npm run typecheck 2>&1 | tee typecheck.log",
+          "file": "typecheck.log",
+          "measurement": "Number of TypeScript errors",
+          "baseline": "Current error count"
+        },
+        {
+          "metric": "lint_errors",
+          "command": "npm run lint 2>&1 | tee lint.log",
+          "file": "lint.log",
+          "measurement": "Number of linting errors",
+          "baseline": "Current lint error count"
+        },
+        {
+          "metric": "test_duration",
+          "command": "time npm run test:unit",
+          "file": "test-duration.log",
+          "measurement": "Unit test execution time",
+          "baseline": "Current test duration"
+        },
+        {
+          "metric": "unused_dependencies",
+          "command": "npx knip --json",
+          "file": "knip-report.json",
+          "measurement": "Count of unused dependencies",
+          "baseline": "Current unused count"
+        }
+      ],
+      "postMigration": [
+        {
+          "metric": "bundle_size",
+          "command": "npm run build:analyze",
+          "file": "build/static/js/*.js",
+          "measurement": "Bundle size change comparison",
+          "target": "< 5% increase from baseline"
+        },
+        {
+          "metric": "test_coverage",
+          "command": "npm run test:coverage -- --json",
+          "file": "coverage/coverage-final.json",
+          "measurement": "Coverage comparison",
+          "target": "≥ 90% coverage on migrated modules"
+        },
+        {
+          "metric": "build_time",
+          "command": "time npm run build",
+          "file": "build.log",
+          "measurement": "Build time impact",
+          "target": "< 10% increase from baseline"
+        },
+        {
+          "metric": "api_response_time",
+          "command": "npm run test:performance -- --measureApiCalls",
+          "file": "api-performance.log",
+          "measurement": "Average API response time",
+          "target": "No significant performance degradation"
+        },
+        {
+          "metric": "error_count",
+          "command": "grep -r 'Error\\|Exception' src/shared/api/ | wc -l",
+          "file": "error-count.log",
+          "measurement": "Error handling implementation count",
+          "target": "All endpoints have proper error handling"
+        },
+        {
+          "metric": "legacy_usage",
+          "command": "grep -r 'appFetch\\|token\\.service' src/ --exclude-dir=node_modules | wc -l",
+          "file": "legacy-usage.log",
+          "measurement": "Remaining legacy API calls",
+          "target": "Only in explicitly kept legacy areas"
+        },
+        {
+          "metric": "type_safety_score",
+          "command": "npx type-coverage --detail",
+          "file": "type-coverage.log",
+          "measurement": "TypeScript type coverage",
+          "target": "≥ 95% type coverage"
+        }
+      ],
+      "monitoring": {
+        "real_time": [
+          {
+            "tool": "console error tracking",
+            "implementation": "window.addEventListener('error', ...)",
+            "measurement": "JavaScript errors in production"
+          },
+          {
+            "tool": "API response monitoring",
+            "implementation": "Fetch interceptor logging",
+            "measurement": "API success/failure rates"
+          },
+          {
+            "tool": "User interaction tracking",
+            "implementation": "Event listener for auth flows",
+            "measurement": "Authentication success rates"
+          }
+        ],
+        "automated": [
+          {
+            "script": "scripts/collect-metrics.sh",
+            "schedule": "pre/post migration",
+            "outputs": ["bundle-size.json", "test-results.json", "performance.json"]
+          },
+          {
+            "script": "scripts/compare-metrics.js",
+            "schedule": "after migration",
+            "outputs": ["migration-report.json", "regression-alert.json"]
+          }
+        ]
+      }
+    },
+    "validationCriteria": {
+      "success": [
+        "All unit and integration tests passing",
+        "TypeScript compilation without errors",
+        "Bundle size increase < 5%",
+        "Test coverage ≥ 90% on migrated modules",
+        "No performance degradation > 10%",
+        "All smoke tests passing in production mode"
+      ],
+      "warning": [
+        "Bundle size increase 5-10%",
+        "Test coverage 80-90%",
+        "Build time increase 10-20%",
+        "Minor TypeScript warnings",
+        "Some smoke tests flaky"
+      ],
+      "failure": [
+        "Any test failures",
+        "TypeScript compilation errors",
+        "Bundle size increase > 10%",
+        "Test coverage < 80%",
+        "Critical smoke test failures",
+        "Performance degradation > 20%"
+      }
+    }
+  }
+}

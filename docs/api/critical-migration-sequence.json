@@ -1,0 +1,494 @@
+{
+  "critical_migration_sequence": [
+    {
+      "endpoint": "POST /auth/login",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/pages/Login.jsx",
+        "src/components/LoginForm.jsx",
+        "src/hooks/useAuth.js"
+      ],
+      "removals": [
+        "appFetch calls in Login.jsx",
+        "direct fetch in LoginForm.jsx",
+        "auth.service.js login methods"
+      ],
+      "dto": [
+        "types/auth.ts: LoginRequest, LoginResponse",
+        "types/user.ts: UserProfile",
+        "types/api.ts: ApiResponse<LoginResponse>"
+      ],
+      "smoke": "1. Запустить npm start\n2. Открыть страницу логина\n3. Ввести валидные учетные данные\n4. Проверить успешный вход и редирект\n5. Проверить сохранение токена в localStorage\n6. Проверить загрузку профиля пользователя"
+    },
+    {
+      "endpoint": "POST /auth/logout",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/pages/Logout.jsx",
+        "src/components/Header.jsx",
+        "src/hooks/useAuth.js"
+      ],
+      "removals": [
+        "appFetch('/auth/logout') calls",
+        "token.service.js logout methods",
+        "manual localStorage clearing"
+      ],
+      "dto": [
+        "types/auth.ts: LogoutRequest, LogoutResponse",
+        "types/api.ts: ApiResponse<void>"
+      ],
+      "smoke": "1. Войти в систему\n2. Нажать кнопку выход\n3. Проверить очистку localStorage\n4. Проверить редирект на страницу логина\n5. Проверить недоступность защищенных роутов"
+    },
+    {
+      "endpoint": "POST /auth/refresh",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/utilities/appFetch.js (refresh logic)",
+        "src/services/token.service.js",
+        "src/shared/api/client.ts (interceptor)"
+      ],
+      "removals": [
+        "legacy refresh logic in appFetch.js",
+        "token refresh in token.service.js",
+        "manual token expiry checks"
+      ],
+      "dto": [
+        "types/auth.ts: RefreshRequest, RefreshResponse",
+        "types/api.ts: ApiResponse<RefreshResponse>"
+      ],
+      "smoke": "1. Войти в систему\n2. Дождаться истечения access токена (или очистить вручную)\n3. Сделать запрос к защищенному эндпоинту\n4. Проверить автоматический refresh токена\n5. Проверить что запрос выполнен успешно\n6. Проверить обновление токена в localStorage"
+    },
+    {
+      "endpoint": "GET /user/profile",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Profile.jsx",
+        "src/components/UserProfile.jsx",
+        "src/hooks/useProfile.js",
+        "src/pages/Settings.jsx"
+      ],
+      "removals": [
+        "appFetch('user/profile') calls",
+        "direct fetch in profile components",
+        "legacy user service calls"
+      ],
+      "dto": [
+        "types/user.ts: UserProfile, UserSettings",
+        "types/api.ts: ApiResponse<UserProfile>",
+        "types/index.ts: User interface (update)"
+      ],
+      "smoke": "1. Войти в систему\n2. Открыть страницу профиля\n3. Проверить загрузку данных пользователя\n4. Проверить отображение имени, email, роли\n5. Проверить загрузку аватара\n6. Обновить страницу и проверить кэширование"
+    },
+    {
+      "endpoint": "PATCH /user/profile",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Profile.jsx",
+        "src/components/ProfileEdit.jsx",
+        "src/pages/Settings.jsx"
+      ],
+      "removals": [
+        "appFetch PATCH calls for profile",
+        "direct form submissions",
+        "legacy update methods"
+      ],
+      "dto": [
+        "types/user.ts: UpdateProfileRequest, Partial<UserProfile>",
+        "types/api.ts: ApiResponse<UserProfile>",
+        "forms/profile.ts: ProfileFormData"
+      ],
+      "smoke": "1. Открыть страницу редактирования профиля\n2. Изменить имя пользователя\n3. Сохранить изменения\n4. Проверить успешное обновление\n5. Обновить страницу и проверить сохранение\n6. Попробовать обновить аватар"
+    },
+    {
+      "endpoint": "POST /user/password/reset",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/PasswordReset.jsx",
+        "src/components/PasswordResetForm.jsx",
+        "src/pages/ForgotPassword.jsx"
+      ],
+      "removals": [
+        "appFetch password reset calls",
+        "direct email submission forms",
+        "legacy password service"
+      ],
+      "dto": [
+        "types/user.ts: PasswordResetRequest, PasswordResetResponse",
+        "types/api.ts: ApiResponse<PasswordResetResponse>",
+        "forms/auth.ts: PasswordResetForm"
+      ],
+      "smoke": "1. Открыть страницу сброса пароля\n2. Ввести email для сброса\n3. Отправить форму\n4. Проверить получение email с инструкциями\n5. Перейти по ссылке из email\n6. Установить новый пароль\n7. Войти с новым паролем"
+    },
+    {
+      "endpoint": "GET /balance",
+      "module": "shared/api/modules/finance.module.ts",
+      "callers": [
+        "src/pages/Balance.jsx",
+        "src/components/BalanceCard.jsx",
+        "src/components/Header.jsx (balance display)",
+        "src/hooks/useBalance.js"
+      ],
+      "removals": [
+        "appFetch('/balance') calls",
+        "direct balance fetch in components",
+        "legacy finance service calls"
+      ],
+      "dto": [
+        "types/finance.ts: Balance, Transaction",
+        "types/api.ts: ApiResponse<Balance>",
+        "types/index.ts: Balance interface"
+      ],
+      "smoke": "1. Войти в систему\n2. Открыть страницу баланса\n3. Проверить отображение текущего баланса\n4. Проверить историю транзакций\n5. Пополнить баланс (если есть функционал)\n6. Проверить обновление баланса в реальном времени"
+    },
+    {
+      "endpoint": "GET /balance/transactions",
+      "module": "shared/api/modules/finance.module.ts",
+      "callers": [
+        "src/pages/Balance.jsx",
+        "src/components/TransactionHistory.jsx",
+        "src/hooks/useTransactions.js"
+      ],
+      "removals": [
+        "appFetch('/balance/transactions') calls",
+        "legacy transaction fetching",
+        "direct API calls in balance components"
+      ],
+      "dto": [
+        "types/finance.ts: Transaction, TransactionFilters, PaginatedTransactions",
+        "types/api.ts: ApiResponse<PaginatedTransactions>",
+        "types/index.ts: Transaction interface"
+      ],
+      "smoke": "1. Открыть страницу баланса\n2. Перейти к истории транзакций\n3. Проверить загрузку списка транзакций\n4. Проверить фильтрацию по датам\n5. Проверить пагинацию\n6. Проверить детали транзакции"
+    },
+    {
+      "endpoint": "POST /verification/email/send",
+      "module": "shared/api/modules/verification.module.ts",
+      "callers": [
+        "src/pages/EmailVerification.jsx",
+        "src/components/EmailVerificationForm.jsx",
+        "src/pages/Register.jsx (post-registration)"
+      ],
+      "removals": [
+        "appFetch email verification calls",
+        "direct email sending forms",
+        "legacy verification service"
+      ],
+      "dto": [
+        "types/verification.ts: EmailVerificationRequest, EmailVerificationResponse",
+        "types/api.ts: ApiResponse<EmailVerificationResponse>",
+        "forms/auth.ts: EmailVerificationForm"
+      ],
+      "smoke": "1. Зарегистрировать нового пользователя\n2. Проверить получение verification email\n3. Перейти по ссылке из email\n4. Проверить успешную верификацию\n5. Попробовать повторно отправить письмо\n6. Проверить статус верификации в профиле"
+    },
+    {
+      "endpoint": "POST /verification/email/verify",
+      "module": "shared/api/modules/verification.module.ts",
+      "callers": [
+        "src/pages/EmailVerification.jsx",
+        "src/components/EmailVerifyForm.jsx",
+        "src/pages/VerifyEmail.jsx"
+      ],
+      "removals": [
+        "appFetch verification calls",
+        "direct token validation",
+        "legacy email verification logic"
+      ],
+      "dto": [
+        "types/verification.ts: VerifyEmailRequest, VerifyEmailResponse",
+        "types/api.ts: ApiResponse<VerifyEmailResponse>",
+        "types/auth.ts: VerificationStatus"
+      ],
+      "smoke": "1. Перейти по ссылке из verification email\n2. Проверить автоматическую верификацию\n3. Попробовать верифицировать вручную через форму\n4. Проверить обработку неверного токена\n5. Проверить редирект после успешной верификации\n6. Проверить обновление статуса в профиле"
+    },
+    {
+      "endpoint": "POST /verification/phone/send",
+      "module": "shared/api/modules/verification.module.ts",
+      "callers": [
+        "src/pages/PhoneVerification.jsx",
+        "src/components/PhoneVerificationForm.jsx",
+        "src/pages/Profile.jsx (phone adding)"
+      ],
+      "removals": [
+        "appFetch SMS sending calls",
+        "direct SMS API integration",
+        "legacy phone verification service"
+      ],
+      "dto": [
+        "types/verification.ts: PhoneVerificationRequest, PhoneVerificationResponse",
+        "types/api.ts: ApiResponse<PhoneVerificationResponse>",
+        "forms/profile.ts: PhoneVerificationForm"
+      ],
+      "smoke": "1. Добавить номер телефона в профиле\n2. Запустить верификацию телефона\n3. Проверить получение SMS с кодом\n4. Ввести код верификации\n5. Проверить успешную верификацию\n6. Проверить обновление статуса телефона"
+    },
+    {
+      "endpoint": "POST /verification/phone/verify",
+      "module": "shared/api/modules/verification.module.ts",
+      "callers": [
+        "src/pages/PhoneVerification.jsx",
+        "src/components/PhoneVerifyForm.jsx",
+        "src/components/PhoneCodeInput.jsx"
+      ],
+      "removals": [
+        "appFetch phone code verification",
+        "direct SMS code validation",
+        "legacy phone verification logic"
+      ],
+      "dto": [
+        "types/verification.ts: VerifyPhoneRequest, VerifyPhoneResponse",
+        "types/api.ts: ApiResponse<VerifyPhoneResponse>",
+        "types/auth.ts: PhoneVerificationStatus"
+      ],
+      "smoke": "1. Ввести код из SMS\n2. Проверить валидацию кода\n3. Проверить обработку неверного кода\n4. Проверить ограничение попыток ввода\n5. Проверить успешную верификацию\n6. Проверить обновление в профиле"
+    },
+    {
+      "endpoint": "GET /user/settings",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Settings.jsx",
+        "src/components/SettingsForm.jsx",
+        "src/hooks/useSettings.js"
+      ],
+      "removals": [
+        "appFetch('/user/settings') calls",
+        "direct settings fetching",
+        "legacy settings service"
+      ],
+      "dto": [
+        "types/user.ts: UserSettings, NotificationSettings",
+        "types/api.ts: ApiResponse<UserSettings>",
+        "types/index.ts: Settings interface"
+      ],
+      "smoke": "1. Открыть страницу настроек\n2. Проверить загрузку текущих настроек\n3. Проверить настройки уведомлений\n4. Проверить настройки приватности\n5. Изменить настройки и сохранить\n6. Проверить сохранение изменений"
+    },
+    {
+      "endpoint": "PATCH /user/settings",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Settings.jsx",
+        "src/components/SettingsForm.jsx",
+        "src/components/NotificationSettings.jsx"
+      ],
+      "removals": [
+        "appFetch PATCH settings calls",
+        "direct form submissions for settings",
+        "legacy settings update methods"
+      ],
+      "dto": [
+        "types/user.ts: UpdateSettingsRequest, Partial<UserSettings>",
+        "types/api.ts: ApiResponse<UserSettings>",
+        "forms/settings.ts: SettingsFormData"
+      ],
+      "smoke": "1. Изменить настройки уведомлений\n2. Сохранить изменения\n3. Проверить успешное сохранение\n4. Обновить страницу и проверить настройки\n5. Изменить настройки приватности\n6. Проверить применение изменений"
+    },
+    {
+      "endpoint": "POST /user/avatar/upload",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Profile.jsx",
+        "src/components/AvatarUpload.jsx",
+        "src/components/ProfileEdit.jsx"
+      ],
+      "removals": [
+        "appFetch avatar upload calls",
+        "direct FormData submissions",
+        "legacy file upload methods"
+      ],
+      "dto": [
+        "types/user.ts: AvatarUploadRequest, AvatarUploadResponse",
+        "types/api.ts: ApiResponse<AvatarUploadResponse>",
+        "types/upload.ts: UploadProgress, UploadError"
+      ],
+      "smoke": "1. Открыть редактирование профиля\n2. Выбрать новый аватар\n3. Загрузить файл\n4. Проверить прогресс загрузки\n5. Проверить отображение нового аватара\n6. Обновить страницу и проверить аватар"
+    },
+    {
+      "endpoint": "DELETE /user/avatar",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Profile.jsx",
+        "src/components/AvatarUpload.jsx",
+        "src/components/ProfileEdit.jsx"
+      ],
+      "removals": [
+        "appFetch avatar delete calls",
+        "direct avatar deletion requests",
+        "legacy avatar removal methods"
+      ],
+      "dto": [
+        "types/user.ts: DeleteAvatarRequest, DeleteAvatarResponse",
+        "types/api.ts: ApiResponse<void>",
+        "types/user.ts: DefaultAvatar"
+      ],
+      "smoke": "1. Открыть редактирование профиля\n2. Удалить текущий аватар\n3. Проверить установку аватара по умолчанию\n4. Обновить страницу и проверить\n5. Загрузить новый аватар\n6. Проверить корректную работу"
+    },
+    {
+      "endpoint": "GET /auth/sessions",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/pages/Security.jsx",
+        "src/components/ActiveSessions.jsx",
+        "src/components/SessionManager.jsx"
+      ],
+      "removals": [
+        "appFetch('/auth/sessions') calls",
+        "direct session fetching",
+        "legacy session management"
+      ],
+      "dto": [
+        "types/auth.ts: Session, SessionInfo, ActiveSession",
+        "types/api.ts: ApiResponse<Session[]>",
+        "types/security.ts: SecuritySettings"
+      ],
+      "smoke": "1. Открыть страницу безопасности\n2. Проверить список активных сессий\n3. Проверить отображение устройств и местоположений\n4. Завершить сессию на другом устройстве\n5. Проверить обновление списка сессий\n6. Проверить завершение всех сессий"
+    },
+    {
+      "endpoint": "DELETE /auth/sessions/{sessionId}",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/pages/Security.jsx",
+        "src/components/ActiveSessions.jsx",
+        "src/components/SessionItem.jsx"
+      ],
+      "removals": [
+        "appFetch session termination calls",
+        "direct session deletion requests",
+        "legacy session termination"
+      ],
+      "dto": [
+        "types/auth.ts: TerminateSessionRequest, TerminateSessionResponse",
+        "types/api.ts: ApiResponse<void>",
+        "types/security.ts: SessionTermination"
+      ],
+      "smoke": "1. Открыть список активных сессий\n2. Найти сессию на другом устройстве\n3. Нажать завершить сессию\n4. Подтвердить завершение\n5. Проверить удаление сессии из списка\n6. Проверить что устройство разлогинено"
+    },
+    {
+      "endpoint": "POST /auth/password/change",
+      "module": "shared/api/modules/auth.module.ts",
+      "callers": [
+        "src/pages/PasswordChange.jsx",
+        "src/components/PasswordChangeForm.jsx",
+        "src/pages/Security.jsx"
+      ],
+      "removals": [
+        "appFetch password change calls",
+        "direct password update forms",
+        "legacy password change service"
+      ],
+      "dto": [
+        "types/auth.ts: ChangePasswordRequest, ChangePasswordResponse",
+        "types/api.ts: ApiResponse<ChangePasswordResponse>",
+        "forms/auth.ts: PasswordChangeForm"
+      ],
+      "smoke": "1. Открыть страницу смены пароля\n2. Ввести текущий пароль\n3. Ввести новый пароль\n4. Подтвердить новый пароль\n5. Сохранить изменения\n6. Войти с новым паролем"
+    },
+    {
+      "endpoint": "GET /user/notifications",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Notifications.jsx",
+        "src/components/NotificationCenter.jsx",
+        "src/components/Header.jsx (notification icon)"
+      ],
+      "removals": [
+        "appFetch('/user/notifications') calls",
+        "direct notification fetching",
+        "legacy notification service"
+      ],
+      "dto": [
+        "types/user.ts: Notification, NotificationSettings",
+        "types/api.ts: ApiResponse<Notification[]>",
+        "types/index.ts: Notification interface"
+      ],
+      "smoke": "1. Открыть центр уведомлений\n2. Проверить загрузку списка уведомлений\n3. Проверить прочитанные/непрочитанные статусы\n4. Отметить уведомление как прочитанное\n5. Проверить счетчик уведомлений в шапке\n6. Проверить обновление в реальном времени"
+    },
+    {
+      "endpoint": "PATCH /user/notifications/{id}/read",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Notifications.jsx",
+        "src/components/NotificationItem.jsx",
+        "src/components/NotificationCenter.jsx"
+      ],
+      "removals": [
+        "appFetch notification read status calls",
+        "direct notification status updates",
+        "legacy notification marking"
+      ],
+      "dto": [
+        "types/user.ts: MarkNotificationReadRequest, MarkNotificationReadResponse",
+        "types/api.ts: ApiResponse<void>",
+        "types/index.ts: NotificationStatus"
+      ],
+      "smoke": "1. Открыть список уведомлений\n2. Найти непрочитанное уведомление\n3. Отметить как прочитанное\n4. Проверить обновление статуса\n5. Проверить счетчик непрочитанных\n6. Обновить страницу и проверить статус"
+    },
+    {
+      "endpoint": "DELETE /user/notifications/{id}",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Notifications.jsx",
+        "src/components/NotificationItem.jsx",
+        "src/components/NotificationCenter.jsx"
+      ],
+      "removals": [
+        "appFetch notification deletion calls",
+        "direct notification removal requests",
+        "legacy notification deletion"
+      ],
+      "dto": [
+        "types/user.ts: DeleteNotificationRequest, DeleteNotificationResponse",
+        "types/api.ts: ApiResponse<void>",
+        "types/index.ts: NotificationActions"
+      ],
+      "smoke": "1. Открыть список уведомлений\n2. Найти уведомление для удаления\n3. Удалить уведомление\n4. Проверить удаление из списка\n5. Попробовать удалить несколько уведомлений\n6. Проверить очистку всех уведомлений"
+    },
+    {
+      "endpoint": "GET /user/permissions",
+      "module": "shared/api/modules/user.module.ts",
+      "callers": [
+        "src/pages/Profile.jsx",
+        "src/components/PermissionCheck.jsx",
+        "src/hooks/usePermissions.js"
+      ],
+      "removals": [
+        "appFetch('/user/permissions') calls",
+        "direct permission checks",
+        "legacy permission service"
+      ],
+      "dto": [
+        "types/user.ts: UserPermissions, Permission, Role",
+        "types/api.ts: ApiResponse<UserPermissions>",
+        "types/auth.ts: PermissionCheck"
+      ],
+      "smoke": "1. Войти как пользователь с правами\n2. Проверить доступ к защищенным разделам\n3. Войти как обычный пользователь\n4. Проверить отсутствие доступа к админским функциям\n5. Проверить отображение/скрытие кнопок по правам\n6. Проверить работу PermissionCheck компонента"
+    }
+  ],
+  "migration_order": [
+    "auth.module.ts (login, logout, refresh)",
+    "user.module.ts (profile, settings, avatar)",
+    "verification.module.ts (email, phone verification)",
+    "finance.module.ts (balance, transactions)",
+    "notification.system (notifications, permissions)"
+  ],
+  "testing_strategy": {
+    "unit_tests": "Каждый модуль тестируется с Jest/Vitest",
+    "integration_tests": "Проверка взаимодействия модулей",
+    "e2e_tests": "Cypress/Playwright тесты для критичных путей",
+    "smoke_tests": "Ручная проверка после каждого этапа миграции",
+    "regression_tests": "Полная проверка функционала после миграции"
+  },
+  "rollback_plan": {
+    "strategy": "Поэтапный откат с сохранением legacy кода",
+    "triggers": [
+      "Критические ошибки в авторизации",
+      "Потеря функционала",
+      "Проблемы с производительностью",
+      "Обнаружение багов в production"
+    ],
+    "steps": [
+      "Остановить миграцию",
+      "Откатить изменения в Git",
+      "Восстановить legacy вызовы",
+      "Проанализировать причины проблем",
+      "Обновить план миграции"
+    ]
+  }
+}
