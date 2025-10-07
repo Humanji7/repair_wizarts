@@ -1,5 +1,6 @@
 import { getConfigValue } from './config';
 import { getAuthHeaders } from './auth';
+import { attemptTokenRefresh } from './token';
 import type { ApiError, RequestOptions, Result } from './types';
 
 function buildUrl(base: string, path: string, query?: RequestOptions['query']): string {
@@ -42,18 +43,17 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
   const correlationId = Math.random().toString(36).slice(2);
   const url = buildUrl(base, path, opts.query);
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...opts.headers,
-    ...getAuthHeaders(),
-  };
-
   const method = opts.method || 'GET';
   const body = opts.body !== undefined && method !== 'GET' ? JSON.stringify(opts.body) : undefined;
 
   const { signal, dispose } = createAbortableController(opts.timeoutMs, opts.signal);
 
-  const doFetch = async (): Promise<Result<T>> => {
+  const doFetch = async (isRetry = false, overrideAuthHeaders?: Record<string, string>): Promise<Result<T>> => {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...opts.headers,
+      ...overrideAuthHeaders || getAuthHeaders(),
+    };
     try {
       if (process.env.NODE_ENV !== 'production') {
         console.debug('[api]', correlationId, method, url);
@@ -65,6 +65,17 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
       if (resp.ok) {
         return { ok: true, data: data as T, correlationId };
       }
+
+      // Handle 401 Unauthorized - try to refresh token
+      if (resp.status === 401 && !isRetry && headers.Authorization) {
+        const refreshSuccess = await attemptTokenRefresh();
+        if (refreshSuccess) {
+          // Retry with updated auth headers
+          return await doFetch(true, getAuthHeaders());
+        }
+        // If refresh failed, return original 401 error
+      }
+
       const err: ApiError = {
         status: resp.status,
         message: (data && (data.detail || data.message)) || resp.statusText || 'HTTP error',

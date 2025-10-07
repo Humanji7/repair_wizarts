@@ -2,6 +2,24 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Запуск (Setup)
+
+### Переменные окружения
+
+Создайте файл `.env` на основе `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Обязательно установите `REACT_APP_API_URL` для подключения к API:
+
+```
+REACT_APP_API_URL=https://your-api-server.com/api/v1/
+```
+
+**Примечание:** Если `REACT_APP_API_URL` не установлена, система будет использовать резервный URL из `src/constants/SERVER_PATH.js`.
+
 ## Available Scripts
 
 In the project directory, you can run:

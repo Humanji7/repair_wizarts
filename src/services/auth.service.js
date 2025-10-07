@@ -1,53 +1,44 @@
-import appFetch from '../utilities/appFetch';
-
-const normalizeLogin = (username, type) => {
-  if (type === 'email') {
-    return username.trim();
-  }
-
-  const trimmed = username.trim();
-  const digits = trimmed.replace(/\D/g, '');
-
-  if (!digits) {
-    return '';
-  }
-
-  if (trimmed.startsWith('+')) {
-    return `+${digits}`;
-  }
-
-  return digits;
-};
+import { login as apiLogin, logout as apiLogout } from '../shared/api/modules/auth';
+import { api } from '../shared/api/client';
 
 const login = async (username, password, type = 'phone') => {
-  const normalizedLogin = normalizeLogin(username, type);
-
-  const { auth_hash } = await appFetch('/auth/', {
-    body: {
-      login: normalizedLogin,
-      password,
-      st: true,
-      type,
-    },
-  });
-  return appFetch('/token/', { body: { auth_hash } });
+  const result = await apiLogin(username, password, type);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Login failed');
+  }
+  return result.data;
 };
 
-const registerAsClient = (payload) =>
-  appFetch('/register', {
-    body: { ...payload, st: true, u_role: 1 },
-  });
+const logout = async () => {
+  const result = await apiLogout();
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Logout failed');
+  }
+};
 
-const registerAsMaster = (payload) =>
-  appFetch('/register', {
-    body: { ...payload, st: true, u_role: 2 },
-  });
+const registerAsClient = async (payload) => {
+  const result = await api.post('/register', { ...payload, st: true, u_role: 1 });
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Registration failed');
+  }
+  return result.data;
+};
 
-const addMaster = async (payload) =>
-  appFetch('user/add-master', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+const registerAsMaster = async (payload) => {
+  const result = await api.post('/register', { ...payload, st: true, u_role: 2 });
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Registration failed');
+  }
+  return result.data;
+};
+
+const addMaster = async (payload) => {
+  const result = await api.post('user/add-master', payload);
+  if (!result.ok) {
+    throw new Error(result.error.message || 'Add master failed');
+  }
+  return result.data;
+};
 
 // Тестовая версия метода login с передачей данных прямо в теле
 //~ const loginTest = () => {
@@ -129,4 +120,4 @@ const addMaster = async (payload) =>
 
 //~ export { loginTest, registerAsClientTest, registerAsMasterTest, addMasterTest };
 
-export { login, registerAsClient, registerAsMaster, addMaster };
+export { login, logout, registerAsClient, registerAsMaster, addMaster };

@@ -1,0 +1,239 @@
+{
+  "unification_plan": {
+    "description": "Задачи по унификации конфигураций API, токенов и обработки ошибок",
+    "current_state_analysis": {
+      "config_systems": {
+        "new_api": "src/shared/api/config.ts - использует REACT_APP_API_URL",
+        "legacy_api": "src/constants/SERVER_PATH.js - хардкодит https://ibronevik.ru/taxi/c/tutor/api/v1/",
+        "env_file": ".env - содержит только OpenAI настройки, отсутствуют API конфигурации"
+      },
+      "token_systems": {
+        "new_auth": "src/shared/api/auth.ts - использует Bearer токен, ждет реализации refresh",
+        "legacy_token": "src/services/token.service.js - хранит userdata в localStorage",
+        "appFetch": "src/utilities/appFetch.js - комплексная система с refresh, хешами, admin режимом"
+      },
+      "key_issues": [
+        "Две системы конфигурации URL (env vs хардкод)",
+        "Формат токенов отличается (Bearer vs custom hash)",
+        "Дублирование логики refresh в appFetch",
+        "Отсутствие env переменных для API URL",
+        "Смешанная авторизация (Bearer vs custom token/hash)"
+      ]
+    },
+    "tasks": [
+      {
+        "task": "Унифицировать систему конфигурации URL",
+        "priority": 1,
+        "files": [
+          "src/shared/api/config.ts",
+          "src/constants/SERVER_PATH.js",
+          ".env",
+          ".env.example"
+        ],
+        "changes": [
+          "Добавить REACT_APP_API_URL в .env.example",
+          "Расширить src/shared/api/config.ts с fallback на SERVER_PATH",
+          "Обновить все импорты SERVER_PATH на getConfigValue",
+          "Добавить REACT_APP_API_TIMEOUT для настройки таймаутов",
+          "Добавить REACT_APP_API_ENV для dev/staging/prod"
+        ],
+        "tests": [
+          "src/shared/api/config.test.ts - тесты getConfigValue с разными env",
+          "Проверка что REACT_APP_API_URL корректно считывается",
+          "Проверка fallback на legacy SERVER_PATH",
+          "Проверка что undefined значения обрабатываются",
+          "Проверка что process.env работает в build"
+        ]
+      },
+      {
+        "task": "Унифицировать формат токенов и авторизации",
+        "priority": 1,
+        "files": [
+          "src/services/token.service.js",
+          "src/shared/api/auth.ts",
+          "src/utilities/appFetch.js"
+        ],
+        "changes": [
+          "Создать единый интерфейс токена { access_token, refresh_token, expires_at }",
+          "Обновить token.service для работы с новым форматом",
+          "Реализовать refresh логику в src/shared/api/auth.ts",
+          "Добавить поддержку legacy формата для обратной совместимости",
+          "Унифицировать получение auth headers"
+        ],
+        "tests": [
+          "src/services/token.service.test.ts - тесты set/get/update/removeToken",
+          "src/shared/api/auth.test.ts - тесты getAuthHeaders с разными токенами",
+          "Проверка миграции legacy userdata в новый формат",
+          "Проверка что expires_at корректно обрабатывается",
+          "Проверка refresh логики с 401 ошибками",
+          "Тест на очистку токенов при logout"
+        ]
+      },
+      {
+        "task": "Стандартизировать обработку ошибок и retry логику",
+        "priority": 2,
+        "files": [
+          "src/shared/api/client.ts",
+          "src/shared/api/types.ts",
+          "src/utilities/appFetch.js"
+        ],
+        "changes": [
+          "Определить единый ApiError интерфейс",
+          "Реализовать retry логику в shared/api клиенте",
+          "Добавить интерцепторы для refresh токена",
+          "Стандартизировать формат ответа { ok, data?, error? }",
+          "Добавить корреляционные ID для отладки"
+        ],
+        "tests": [
+          "src/shared/api/client.test.ts - тесты retry логики",
+          "Тесты обработки сетевых ошибок",
+          "Тесты таймаутов и abort signal",
+          "Проверка корреляционных ID в логах",
+          "Тесты refresh при 401 статусе",
+          "Проверка что retry не работает для 4xx ошибок"
+        ]
+      },
+      {
+        "task": "Создать env конфигурацию для разных окружений",
+        "priority": 2,
+        "files": [
+          ".env.example",
+          ".env.development",
+          ".env.production",
+          "package.json",
+          "src/shared/api/config.ts"
+        ],
+        "changes": [
+          "Создать .env.example с всеми API переменными",
+          "Добавить REACT_APP_API_URL для dev/prod окружений",
+          "Добавить REACT_APP_API_TIMEOUT, REACT_APP_API_RETRIES",
+          "Добавить REACT_APP_ENABLE_API_LOGGING",
+          "Обновить package.json scripts для разных окружений"
+        ],
+        "tests": [
+          "Проверка что .env.development используется в npm start",
+          "Проверка что .env.production используется в npm run build",
+          "Тесты что отсутствующие переменные имеют fallback",
+          "Проверка что логирование включается только в dev",
+          "Валидация всех обязательных env переменных"
+        ]
+      },
+      {
+        "task": "Реализовать единый refresh токен механизм",
+        "priority": 3,
+        "files": [
+          "src/shared/api/auth.ts",
+          "src/shared/api/client.ts",
+          "src/services/token.service.js"
+        ],
+        "changes": [
+          "Перенести refresh логику из appFetch в auth.ts",
+          "Реализовать очередь запросов во время refresh",
+          "Добавить проверку expires_at для proactive refresh",
+          "Обработать race condition при параллельных запросах",
+          "Добавить fallback на legacy refresh при необходимости"
+        ],
+        "tests": [
+          "src/shared/api/auth.test.ts - тесты refresh очереди",
+          "Проверка proactive refresh по expires_at",
+          "Тесты race condition с множественными запросами",
+          "Проверка что failed refresh вызывает logout",
+          "Тест наследования legacy refresh если backend еще не обновлен"
+        ]
+      },
+      {
+        "task": "Мигрировать admin/хеш авторизацию в стандартный формат",
+        "priority": 3,
+        "files": [
+          "src/utilities/appFetch.js",
+          "src/shared/api/auth.ts",
+          "src/shared/api/client.ts"
+        ],
+        "changes": [
+          "Выделить admin авторизацию в отдельные методы",
+          "Создать getAdminHeaders() функции",
+          "Добавить поддержку custom headers в API клиент",
+          "Обеспечить обратную совместимость для admin эндпоинтов",
+          "Документировать где используется admin доступ"
+        ],
+        "tests": [
+          "Тесты getAdminHeaders с admin флагом",
+          "Проверка что custom хешы передаются корректно",
+          "Тесты что обычная авторизация не смешивается с admin",
+          "Проверка legacy admin эндпоинтов",
+          "Валидация что admin токены не используются для обычных запросов"
+        ]
+      }
+    ],
+    "validation_steps": [
+      {
+        "step": "Базовая конфигурация",
+        "description": "Проверить что API URL корректно загружается из env",
+        "commands": [
+          "npm start",
+          "Открыть dev console, проверить что REACT_APP_API_URL определен",
+          "Проверить сетевые запросы идут на правильный URL"
+        ]
+      },
+      {
+        "step": "Авторизация",
+        "description": "Проверить работу токенов и refresh механизма",
+        "commands": [
+          "Войти в систему",
+          "Проверить что токен сохраняется в localStorage",
+          "Дождаться истечения токена (или очистить)",
+          "Проверить что refresh работает автоматически",
+          "Проверить что logout очищает токены"
+        ]
+      },
+      {
+        "step": "Обработка ошибок",
+        "description": "Проверить retry логику и обработку ошибок",
+        "commands": [
+          "Отключить интернет и сделать запрос",
+          "Проверить что retry работает",
+          "Проверить что ошибки отображаются пользователю",
+          "Проверить логирование ошибок в dev console"
+        ]
+      },
+      {
+        "step": "Admin функциональность",
+        "description": "Проверить что admin режим все еще работает",
+        "commands": [
+          "Войти как admin пользователь",
+          "Проверить admin эндпоинты",
+          "Убедиться что хеш авторизация работает",
+          "Проверить что обычные пользователи не получают admin доступ"
+        ]
+      },
+      {
+        "step": "Production сборка",
+        "description": "Проверить что все работает в production",
+        "commands": [
+          "npm run build",
+          "npm run start",
+          "Проверить что env переменные подставились",
+          "Проверить что API запросы работают"
+        ]
+      }
+    ],
+    "risk_mitigation": [
+      {
+        "risk": "Потеря авторизации при миграции токенов",
+        "mitigation": "Сохранить backward compatibility для legacy token формата"
+      },
+      {
+        "risk": "Сломать admin функциональность",
+        "mitigation": "Выделить separate methods для admin авторизации"
+      },
+      {
+        "risk": "Регрессия в refresh логике",
+        "mitigation": "Сохранить working refresh из appFetch как fallback"
+      },
+      {
+        "risk": "Ошибки с env переменными в production",
+        "mitigation": "Добавить валидацию обязательных переменных при старте"
+      }
+    ]
+  }
+}

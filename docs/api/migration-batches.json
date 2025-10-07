@@ -1,0 +1,573 @@
+{
+  "migration_plan": {
+    "description": "Поэтапный план миграции API на единую архитектуру shared/api",
+    "total_endpoints": 74,
+    "batches": [
+      {
+        "batch": "critical-auth-user-balance",
+        "priority": 1,
+        "description": "Критичные фичи: аутентификация, профиль пользователя, платежи и баланс",
+        "targets": [
+          {
+            "feature": "auth",
+            "endpoints": [
+              {
+                "verb": "POST",
+                "path": "/auth/",
+                "file": "src/services/auth.service.js",
+                "function": "login"
+              },
+              {
+                "verb": "POST",
+                "path": "/token/",
+                "file": "src/services/auth.service.js",
+                "function": "login"
+              },
+              {
+                "verb": "POST",
+                "path": "/register",
+                "file": "src/services/auth.service.js",
+                "function": "registerAsClient"
+              },
+              {
+                "verb": "POST",
+                "path": "/register",
+                "file": "src/services/auth.service.js",
+                "function": "registerAsMaster"
+              },
+              {
+                "verb": "POST",
+                "path": "user/add-master",
+                "file": "src/services/auth.service.js",
+                "function": "addMaster"
+              }
+            ]
+          },
+          {
+            "feature": "user",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "user/authorized",
+                "file": "src/services/user.service.js",
+                "function": "getUser"
+              },
+              {
+                "verb": "POST",
+                "path": "user",
+                "file": "src/services/user.service.js",
+                "function": "updateUser"
+              },
+              {
+                "verb": "POST",
+                "path": "newpass",
+                "file": "src/services/user.service.js",
+                "function": "updatePassword"
+              },
+              {
+                "verb": "POST",
+                "path": "user/recover-password",
+                "file": "src/services/user.service.js",
+                "function": "recoverPassword"
+              },
+              {
+                "verb": "POST",
+                "path": "user/verify-password-recovery/{code}?user_id={user}",
+                "file": "src/services/user.service.js",
+                "function": "recoverPasswordVerify"
+              },
+              {
+                "verb": "POST",
+                "path": "user/change-password",
+                "file": "src/services/user.service.js",
+                "function": "recoverPasswordSend"
+              },
+              {
+                "verb": "DELETE",
+                "path": "user/delete-account",
+                "file": "src/services/user.service.js",
+                "function": "deleteUser"
+              }
+            ]
+          },
+          {
+            "feature": "balance",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "user/deposit-history",
+                "file": "src/services/balance.service.js",
+                "function": "getBalanceHistory"
+              },
+              {
+                "verb": "POST",
+                "path": "user/replenish-balance/{amount}",
+                "file": "src/services/balance.service.js",
+                "function": "replenishBalance"
+              },
+              {
+                "verb": "GET",
+                "path": "user/confirm-payment/{id}",
+                "file": "src/services/balance.service.js",
+                "function": "updateBalance"
+              }
+            ]
+          },
+          {
+            "feature": "verification",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "email/verification/complete?ev_hash={code}",
+                "file": "src/services/verification.service.js",
+                "function": "sendEmailVerificationCode"
+              },
+              {
+                "verb": "POST",
+                "path": "user/send-phone-code",
+                "file": "src/services/verification.service.js",
+                "function": "sendPhoneCode"
+              },
+              {
+                "verb": "POST",
+                "path": "user/verify-phone/{code}",
+                "file": "src/services/verification.service.js",
+                "function": "sendPhoneVerificationCode"
+              },
+              {
+                "verb": "POST",
+                "path": "email/verification/start",
+                "file": "src/services/verification.service.js",
+                "function": "sendEmailCode"
+              }
+            ]
+          }
+        ],
+        "checklist": [
+          "Создать src/shared/api/index.ts с базовым клиентом",
+          "Создать src/shared/api/auth.ts с методами login, register, getToken",
+          "Создать src/shared/api/user.ts с методами getUser, updateUser, updatePassword",
+          "Создать src/shared/api/balance.ts с методами getBalanceHistory, replenishBalance, confirmPayment",
+          "Создать src/shared/api/verification.ts с методами verifyEmail, verifyPhone",
+          "Реализовать интерцепторы для токенов (обновление, логаут)",
+          "Добавить типы TypeScript для всех запросов/ответов",
+          "Мигрировать auth.service.js -> использовать shared/api/auth.ts",
+          "Мигрировать user.service.js -> использовать shared/api/user.ts",
+          "Мигрировать balance.service.js -> использовать shared/api/balance.ts",
+          "Мигрировать verification.service.js -> использовать shared/api/verification.ts",
+          "Удалить дублирующийся код из сервисов",
+          "Обновить импорты в компонентах"
+        ],
+        "smoke_tests": [
+          "Проверить вход/регистрацию пользователя",
+          "Проверить обновление профиля и смена пароля",
+          "Проверить пополнение баланса и подтверждение платежа",
+          "Проверить верификацию email и телефона",
+          "Проверить обновление токена и логаут при истечении",
+          "Проверить обработку ошибок (400, 401, 403, 500)",
+          "Убедиться что все компоненты работают без регрессии"
+        ]
+      },
+      {
+        "batch": "high-volume-orders-requests",
+        "priority": 2,
+        "description": "Массовые фичи: заказы, заявки, предложения и отзывы",
+        "targets": [
+          {
+            "feature": "orders",
+            "endpoints": [
+              {
+                "verb": "POST",
+                "path": "submission/order",
+                "file": "src/services/order.service.js",
+                "function": "createOrder"
+              },
+              {
+                "verb": "PATCH",
+                "path": "submission/order/{id}",
+                "file": "src/services/order.service.js",
+                "function": "updateOrderStatus"
+              },
+              {
+                "verb": "PATCH",
+                "path": "submission/finish-order/{id}?status={payload}",
+                "file": "src/services/order.service.js",
+                "function": "updateOrderStatusFromClient"
+              },
+              {
+                "verb": "POST",
+                "path": "/drive/get/{bookingId}",
+                "file": "src/services/order.service.js",
+                "function": "cancelMasterResponse"
+              },
+              {
+                "verb": "POST",
+                "path": "/drive",
+                "file": "src/services/order.service.js",
+                "function": "getMasterOrders"
+              },
+              {
+                "verb": "POST",
+                "path": "drive/archive",
+                "file": "src/services/order.service.js",
+                "function": "getMasterOrders"
+              }
+            ]
+          },
+          {
+            "feature": "requests",
+            "endpoints": [
+              {
+                "verb": "POST",
+                "path": "/drive",
+                "file": "src/services/request.service.js",
+                "function": "createRequest"
+              },
+              {
+                "verb": "POST",
+                "path": "drive/get/{id}",
+                "file": "src/services/request.service.js",
+                "function": "updateRequest"
+              },
+              {
+                "verb": "PATCH",
+                "path": "submission/complete-request/{id}?status={payload}",
+                "file": "src/services/request.service.js",
+                "function": "updateRequestStatusFromMaster"
+              },
+              {
+                "verb": "POST",
+                "path": "drive/get/{requestId}",
+                "file": "src/services/request.service.js",
+                "function": "deleteRequest"
+              },
+              {
+                "verb": "GET",
+                "path": "submission/request/{requestId}",
+                "file": "src/services/request.service.js",
+                "function": "getRequestById"
+              },
+              {
+                "verb": "POST",
+                "path": "drive",
+                "file": "src/services/request.service.js",
+                "function": "getClientRequests"
+              },
+              {
+                "verb": "POST",
+                "path": "drive, drive/archive",
+                "file": "src/services/request.service.js",
+                "function": "getAllClientRequests"
+              },
+              {
+                "verb": "POST",
+                "path": "drive",
+                "file": "src/services/request.service.js",
+                "function": "getMasterRequests"
+              },
+              {
+                "verb": "GET",
+                "path": "submission/master-requests",
+                "file": "src/services/request.service.js",
+                "function": "getMasterPersonalRequests"
+              }
+            ]
+          },
+          {
+            "feature": "offers",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "submission/offers?request_id={id}",
+                "file": "src/services/offer.service.js",
+                "function": "getOffers"
+              },
+              {
+                "verb": "POST",
+                "path": "submission/offer",
+                "file": "src/services/offer.service.js",
+                "function": "createOffer"
+              },
+              {
+                "verb": "PATCH",
+                "path": "submission/accept-offer/{id}",
+                "file": "src/services/offer.service.js",
+                "function": "acceptOffer"
+              }
+            ]
+          },
+          {
+            "feature": "feedbacks",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "submission/feedbacks/{username}",
+                "file": "src/services/feedback.service.js",
+                "function": "getFeedback"
+              },
+              {
+                "verb": "POST",
+                "path": "submission/feedback",
+                "file": "src/services/feedback.service.js",
+                "function": "createFeedback"
+              },
+              {
+                "verb": "PATCH",
+                "path": "submission/feedback/{id}",
+                "file": "src/services/feedback.service.js",
+                "function": "replyToFeedback"
+              }
+            ]
+          }
+        ],
+        "checklist": [
+          "Создать src/shared/api/orders.ts с методами createOrder, updateOrderStatus, getOrders",
+          "Создать src/shared/api/requests.ts с методами createRequest, updateRequest, getRequests",
+          "Создать src/shared/api/offers.ts с методами getOffers, createOffer, acceptOffer",
+          "Создать src/shared/api/feedbacks.ts с методами getFeedback, createFeedback, replyToFeedback",
+          "Стандартизировать параметры для drive/* эндпоинтов",
+          "Реализовать кэширование для списков заказов/заявок",
+          "Оптимизировать запросы с пагинацией (lc параметр)",
+          "Мигрировать все компоненты Orders/* на новый API",
+          "Мигрировать order.service.js, request.service.js, offer.service.js, feedback.service.js",
+          "Унифицировать обработку статусов (status, payload)",
+          "Добавить React Query для кэширования данных"
+        ],
+        "smoke_tests": [
+          "Проверить создание заявки и заказы",
+          "Проверить получение списков заказов/заявок",
+          "Проверить обновление статусов",
+          "Проверить создание и принятие предложений",
+          "Проверить создание отзывов и ответы на них",
+          "Проверить работу фильтров и пагинации",
+          "Протестировать производительность при больших объемах данных",
+          "Проверить консистентность данных между связанными сущностями"
+        ]
+      },
+      {
+        "batch": "services-articles-reviews-chat",
+        "priority": 3,
+        "description": "Legacy и низкоприоритетные фичи: услуги, статьи, отзывы, чат, локация",
+        "targets": [
+          {
+            "feature": "services",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "service/all-services",
+                "file": "src/services/service.service.js",
+                "function": "getServices"
+              },
+              {
+                "verb": "GET",
+                "path": "service/categories",
+                "file": "src/services/service.service.js",
+                "function": "getServiceCategories"
+              },
+              {
+                "verb": "GET",
+                "path": "service/types",
+                "file": "src/services/service.service.js",
+                "function": "getServiceTypes"
+              },
+              {
+                "verb": "GET",
+                "path": "service/types/{categoryId}",
+                "file": "src/services/service.service.js",
+                "function": "getServiceTypesByCategoryId"
+              },
+              {
+                "verb": "GET",
+                "path": "service/devices",
+                "file": "src/services/service.service.js",
+                "function": "getServiceDevices"
+              },
+              {
+                "verb": "GET",
+                "path": "service/devices/{typeId}",
+                "file": "src/services/service.service.js",
+                "function": "getServiceDevicesByTypeId"
+              },
+              {
+                "verb": "GET",
+                "path": "service/repair_types",
+                "file": "src/services/service.service.js",
+                "function": "getServiceRepairs"
+              },
+              {
+                "verb": "GET",
+                "path": "service/repair_types/{deviceId}",
+                "file": "src/services/service.service.js",
+                "function": "getServiceRepairsByDeviceId"
+              },
+              {
+                "verb": "GET",
+                "path": "service/master-repairs?master_username={username}",
+                "file": "src/services/service.service.js",
+                "function": "getMasterRepairsByUsername"
+              },
+              {
+                "verb": "GET",
+                "path": "service/master-services/{id}",
+                "file": "src/services/service.service.js",
+                "function": "getMasterServices"
+              },
+              {
+                "verb": "PATCH",
+                "path": "service/master-repair/{repairId}",
+                "file": "src/services/service.service.js",
+                "function": "updateMasterRepair"
+              },
+              {
+                "verb": "PATCH",
+                "path": "service/repair_type/{repairId}",
+                "file": "src/services/service.service.js",
+                "function": "updateMasterCustomRepair"
+              },
+              {
+                "verb": "DELETE",
+                "path": "service/master-repair/{repairId}",
+                "file": "src/services/service.service.js",
+                "function": "removeMasterRepair"
+              }
+            ]
+          },
+          {
+            "feature": "articles",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "index/article/{id}",
+                "file": "src/services/article.service.js",
+                "function": "getArticle"
+              },
+              {
+                "verb": "GET",
+                "path": "index/articles",
+                "file": "src/services/article.service.js",
+                "function": "getArticles"
+              },
+              {
+                "verb": "GET",
+                "path": "index/article/{articleId}/comments",
+                "file": "src/services/article.service.js",
+                "function": "getArticleComments"
+              },
+              {
+                "verb": "POST",
+                "path": "index/article/{articleId}/comment",
+                "file": "src/services/article.service.js",
+                "function": "createArticleComment"
+              },
+              {
+                "verb": "PATCH",
+                "path": "index/like-article/{articleId}",
+                "file": "src/services/article.service.js",
+                "function": "likeArticle"
+              },
+              {
+                "verb": "PATCH",
+                "path": "index/dislike-article/{articleId}",
+                "file": "src/services/article.service.js",
+                "function": "dislikeArticle"
+              },
+              {
+                "verb": "POST",
+                "path": "index/article/comment/{commentId}/like",
+                "file": "src/services/article.service.js",
+                "function": "likeArticleComment"
+              },
+              {
+                "verb": "DELETE",
+                "path": "index/article/comment/{commentId}/dislike",
+                "file": "src/services/article.service.js",
+                "function": "dislikeArticleComment"
+              }
+            ]
+          },
+          {
+            "feature": "reviews",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "index/reviews",
+                "file": "src/services/reviews.service.js",
+                "function": "getReviews"
+              },
+              {
+                "verb": "POST",
+                "path": "index/review",
+                "file": "src/services/reviews.service.js",
+                "function": "createReview"
+              }
+            ]
+          },
+          {
+            "feature": "chat",
+            "endpoints": [
+              {
+                "verb": "POST",
+                "path": "chat/dialog",
+                "file": "src/services/dialog.service.js",
+                "function": "createDialog"
+              }
+            ]
+          },
+          {
+            "feature": "location",
+            "endpoints": [
+              {
+                "verb": "GET",
+                "path": "index/cities",
+                "file": "src/services/location.service.js",
+                "function": "getCities"
+              }
+            ]
+          }
+        ],
+        "checklist": [
+          "Создать src/shared/api/services.ts с методами для каталога услуг",
+          "Создать src/shared/api/articles.ts с методами для статей и комментариев",
+          "Создать src/shared/api/reviews.ts с методами для отзывов",
+          "Создать src/shared/api/chat.ts для диалогов",
+          "Создать src/shared/api/location.ts для городов",
+          "Мигрировать service.service.js, article.service.js, reviews.service.js",
+          "Мигрировать dialog.service.js, location.service.js",
+          "Реализовать агрессивное кэширование для справочных данных",
+          "Оптимизировать запросы с выборкой полей",
+          "Использовать React Query для stale-while-revalidate стратегии"
+        ],
+        "smoke_tests": [
+          "Проверить загрузку каталога услуг",
+          "Проверить работу фильтров и категорий",
+          "Проверить отображение статей и комментарии",
+          "Проверить отзывы и лайки",
+          "Проверить базовую функциональность чата",
+          "Проверить загрузку городов для локации",
+          "Убедиться что кэширование работает корректно",
+          "Проверить производительность справочников"
+        ]
+      }
+    ],
+    "cleanup_tasks": [
+      "Удалить все appFetch вызовы из компонентов",
+      "Удалить прямые fetch вызовы (кроме token refresh)",
+      "Удалить старые сервисы после миграции",
+      "Обновить импорты во всех компонентах",
+      "Провести аудит безопасности оставшихся вызовов",
+      "Обновить документацию API",
+      "Настроить мониторинг производительности API"
+    ],
+    "external_api_handling": {
+      "description": "Внешние API вызовы (ibronevik.ru) должны быть выделены в отдельный модуль",
+      "endpoints": [
+        {
+          "verb": "GET",
+          "path": "https://ibronevik.ru/taxi/api/v1/dropbox/file/{id}",
+          "file": "src/components/Orders/OrderRowOffer.jsx"
+        }
+      ],
+      "recommendation": "Создать src/shared/api/external.ts для всех внешних интеграций"
+    }
+  }
+}
