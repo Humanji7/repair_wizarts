@@ -1,6 +1,6 @@
 # API Assessment
 
-Generated: 2025-10-06
+Generated: 2025-10-07
 
 ## Summary
 - **74 unique API endpoints** identified after merging and deduplication from 3 inventory files
@@ -9,6 +9,7 @@ Generated: 2025-10-06
 - **Authentication inconsistencies**: Mixed needsAuth flags, hardcoded admin access, external API security risks
 - **Poor error handling**: 95% of endpoints have "not implemented" error handling
 - **External API dependencies**: Hardcoded external URLs (ibronevik.ru, profiback.itest24.com) mixed with internal APIs
+- **Migration Progress**: Auth, User, and Verification endpoints migrated to shared/api architecture with new token management
 
 ## Key Issues Identified
 
@@ -95,6 +96,51 @@ Generated: 2025-10-06
 - **External API mixing** is manageable but not ideal
 - **Verb mismatches** should be standardized but work
 - **Feature owner overlap** needs clarification
+
+## Migration Progress
+
+### Completed Migrations (2025-10-07)
+**Authentication Module (src/shared/api/modules/auth.ts)**
+- ✅ Login endpoint: POST `/auth/` → `/auth/`
+- ✅ Token endpoint: POST `/token/` → `/auth/token`
+- ✅ Registration endpoints: POST `/register` → `/auth/register`
+- ✅ Centralized token management with automatic refresh
+- ✅ Type-safe request/response interfaces
+- ✅ Consistent error handling
+
+**User Module (src/shared/api/modules/user.ts)**
+- ✅ User profile: GET `user/authorized` → `/user/me`
+- ✅ User update: PATCH `user/update` → `/user/me`
+- ✅ Password management: POST `newpass` → `/user/password`
+- ✅ Account deletion: DELETE `user/delete-account` → `/user/me`
+- ✅ Type-safe interfaces for user data
+- ✅ Centralized user-related endpoints
+
+**Verification Module (src/shared/api/modules/verification.ts)**
+- ✅ Email verification: GET `email/verification/complete` → `/verification/email/complete`
+- ✅ Phone verification: POST `user/verify-phone/{code}` → `/verification/phone/verify`
+- ✅ Code sending: POST `user/send-phone-code` → `/verification/phone/send`
+- ✅ Unified verification flow management
+
+**Token Management (src/shared/api/token.ts)**
+- ✅ Centralized token storage and retrieval
+- ✅ Automatic token refresh logic
+- ✅ Token validation and expiration handling
+- ✅ Secure token storage mechanisms
+
+### Benefits of Migration
+- **Type Safety**: Full TypeScript integration with proper interfaces
+- **Token Management**: Centralized, automatic token refresh and validation
+- **Error Handling**: Consistent error responses and retry logic
+- **Code Organization**: Modular architecture with clear separation of concerns
+- **Maintainability**: Single source of truth for API endpoints
+- **Testing**: Easier unit testing with mockable interfaces
+
+### Remaining Legacy Code
+- **Auth Service**: `src/services/auth.service.js` (deprecated, use shared/api)
+- **User Service**: `src/services/user.service.js` (deprecated, use shared/api)
+- **Verification Service**: `src/services/verification.service.js` (deprecated, use shared/api)
+- **Token Service**: `src/services/token.service.js` (deprecated, use shared/api)
 
 ## Recommendations for API Governance
 
