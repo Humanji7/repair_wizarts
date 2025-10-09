@@ -11,14 +11,10 @@ export type Err = { ok: false; error: ApiError; data?: never; correlationId?: st
 export type Result<T> = Ok<T> | Err;
 
 export type RequestOptions = {
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  method?: 'GET' | 'POST';
   headers?: Record<string, string>;
   query?: Record<string, string | number | boolean | undefined>;
   body?: unknown;
   timeoutMs?: number;
   signal?: AbortSignal;
-  retry?: {
-    attempts?: number; // only for GET
-    backoffMs?: number[]; // e.g., [200, 800]
-  };
 };

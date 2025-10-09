@@ -55,7 +55,7 @@ export async function updateProfile(data: UpdateProfilePayload, id?: number, asA
 }
 
 export async function deleteAccount(): Promise<Result<void>> {
-  return api.delete<void>('user/delete-account');
+  return api.post<void>('user/delete-account');
 }
 
 export async function updatePassword(data: UpdatePasswordPayload): Promise<Result<void>> {
