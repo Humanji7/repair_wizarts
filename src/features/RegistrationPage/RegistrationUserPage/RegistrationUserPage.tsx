@@ -4,20 +4,31 @@ import {useNavigate} from "react-router-dom";
 import styles from './RegistrationUserPage.module.scss';
 import ConfirmPolitics from "../../../components/ConfirmPolitics/ConfirmPolitics";
 import {ConfirmPoliticsContext} from "../../../components/ConfirmPolitics/ConfirmPoliticsContext";
-// import Error from "../../../components/Error/Error";
+import Error from "../../../components/Error/Error";
 import { useLanguage } from '../../../state/language';
 import {registerAsClient} from "../../../services/auth.service";
+import { setToken } from "../../../services/token.service";
+
+type RegisterResponse = {
+  code?: string;
+  message?: string;
+  data?: {
+    token?: string;
+    u_hash?: string;
+  };
+  auth_user?: Record<string, unknown>;
+};
 
 const RegistrationUserPage = () => {
   const text = useLanguage(); // функция для перевода
 
   useEffect(() => {
     document.title =  text('Registration');
-  }, []);
+  }, [text]);
 
   const navigate = useNavigate();
 
-  const [error, setError] = useState();
+  const [error, setError] = useState<string | undefined>();
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -26,24 +37,55 @@ const RegistrationUserPage = () => {
   const [passwordVerification, setPasswordVerification] = useState("");
   const [accept, setAccept] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!accept) {
-      // @ts-ignore
-      return setError(text("To continue, you must accept the privacy policy."));
+      setError(text("To continue, you must accept the privacy policy."));
+      return;
     }
 
-    return registerAsClient({
-      name,
-      lastname,
-      email,
-      phone,
-      password1: password,
-      password2: passwordVerification,
-    })
-      .then(() => navigate("/login"))
-      .catch((err) => setError(err.message))
+    setError(undefined);
+
+    try {
+      const response = (await registerAsClient({
+        name,
+        lastname,
+        email,
+        phone,
+        password1: password,
+        password2: passwordVerification,
+      })) as RegisterResponse;
+
+      if (response?.code === "404") {
+        setError(response?.message ?? text("Unable to process the request"));
+        return;
+      }
+
+      const token = response?.data?.token;
+      const hash = response?.data?.u_hash;
+
+      if (token && hash) {
+        setToken({
+          hash,
+          token,
+          user: {
+            ...(response?.auth_user ?? {}),
+            u_name: `${name.trim()} ${lastname.trim()}`.trim(),
+            u_phone: phone,
+            u_email: email,
+          },
+        });
+
+        setAccept(false);
+        navigate("/");
+        return;
+      }
+
+      navigate("/login");
+    } catch (err: any) {
+      setError(err?.message ?? text("Unable to process the request"));
+    }
   };
 
   return (
@@ -51,10 +93,9 @@ const RegistrationUserPage = () => {
       <div className={`${styles.registrationUserPage} appContainer`}>
         <h1 className={styles.registrationUserPage_title}>{text('Registration')}</h1>
          <form className={styles.registrationUserPage_form} onSubmit={onSubmit}>
-           {/*{error && (*/}
-           {/*// В старом коде className="auth-err"*/}
-           {/*<Error error={error} />*/}
-           {/*)}*/}
+           {error && (
+             <Error error={error} />
+           )}
            <input
              className={styles.registrationUserPage_form_input}
              type="text"
