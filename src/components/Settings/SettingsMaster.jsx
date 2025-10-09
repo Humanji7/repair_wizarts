@@ -155,10 +155,14 @@ export default function SettingsMaster() {
   };
   const onDelete = (e) => {
     e.preventDefault();
-    return deleteUser().then(() => {
-      dispatch(setAuthorization(false));
-      navigate('/');
-    });
+    return deleteUser(user.id)
+      .then(() => {
+        dispatch(setAuthorization(false));
+        navigate('/');
+      })
+      .catch((err) => {
+        setError(err.message || 'Не удалось удалить аккаунт');
+      });
   };
   useEffect(() => {
     if (ui.isAuthorized) {

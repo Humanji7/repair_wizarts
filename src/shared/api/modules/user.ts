@@ -54,8 +54,18 @@ export async function updateProfile(data: UpdateProfilePayload, id?: number, asA
   });
 }
 
-export async function deleteAccount(): Promise<Result<void>> {
-  return api.delete<void>('user/delete-account');
+export async function deleteAccount(userId?: number): Promise<Result<void>> {
+  const payload: Record<string, unknown> = {
+    data: JSON.stringify({
+      u_is_deleted: 1,
+    }),
+  };
+
+  if (typeof userId === 'number') {
+    payload.u_a_id = userId;
+  }
+
+  return api.post<void>('user', payload);
 }
 
 export async function updatePassword(data: UpdatePasswordPayload): Promise<Result<void>> {

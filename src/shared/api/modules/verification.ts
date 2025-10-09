@@ -32,9 +32,16 @@ export async function verifyEmailCode(code: string): Promise<Result<EmailCodeVer
 }
 
 export async function sendPhoneCode(): Promise<Result<PhoneVerificationResponse>> {
-  return api.post<PhoneVerificationResponse>('user/send-phone-code');
+  return api.post<PhoneVerificationResponse>('/auth/', {
+    type: 'phone_code',
+    st: true,
+  });
 }
 
 export async function verifyPhoneCode(code: string): Promise<Result<PhoneCodeVerificationResponse>> {
-  return api.post<PhoneCodeVerificationResponse>(`user/verify-phone/${code}`);
+  return api.post<PhoneCodeVerificationResponse>('/auth/', {
+    type: 'phone_code',
+    st: true,
+    code,
+  });
 }
