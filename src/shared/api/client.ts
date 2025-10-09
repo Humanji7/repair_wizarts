@@ -1,6 +1,5 @@
 import { getConfigValue } from './config';
 import { getAuthHeaders } from './auth';
-import { attemptTokenRefresh } from './token';
 import type { ApiError, RequestOptions, Result } from './types';
 
 function buildUrl(base: string, path: string, query?: RequestOptions['query']): string {
@@ -64,21 +63,6 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
       const data = isJson ? await resp.json().catch(() => undefined) : await resp.text();
       if (resp.ok) {
         return { ok: true, data: data as T, correlationId };
-      }
-
-      // Handle 401 Unauthorized - try to refresh token
-      if (resp.status === 401 && !isRetry && headers.Authorization) {
-        try {
-          const refreshSuccess = await attemptTokenRefresh();
-          if (refreshSuccess) {
-            // Retry with updated auth headers
-            return await doFetch(true, getAuthHeaders());
-          }
-          // If refresh failed, return original 401 error
-        } catch (refreshError) {
-          // If token refresh throws an exception, log it and continue with original 401 error
-          console.error('Token refresh failed with exception:', refreshError);
-        }
       }
 
       const err: ApiError = {

@@ -3,9 +3,7 @@ import type { Result } from '../types';
 
 export type LoginPayload = { username: string; password: string; type?: 'phone' | 'email' };
 export type AuthHashResponse = { auth_hash: string };
-export type TokenResponse = { access_token: string; refresh_token?: string };
-export type LoginResponse = { access_token: string; refresh_token?: string };
-export type RefreshTokenResponse = { access_token: string; refresh_token?: string };
+export type TokenResponse = { access_token: string };
 
 export async function login(username: string, password: string, type: 'phone' | 'email' = 'phone'): Promise<Result<TokenResponse>> {
   const normalizeLogin = (username: string, type: 'phone' | 'email') => {
@@ -33,7 +31,6 @@ export async function login(username: string, password: string, type: 'phone' | 
   const authResult = await api.post<AuthHashResponse>('/auth/', {
     login: normalizedLogin,
     password,
-    st: true,
     type,
   });
 
@@ -49,6 +46,3 @@ export async function logout(): Promise<Result<void>> {
   return api.post<void>('/auth/logout');
 }
 
-export async function refreshToken(refreshToken: string): Promise<Result<RefreshTokenResponse>> {
-  return api.post<RefreshTokenResponse>('/token/refresh', { refresh_token: refreshToken });
-}
