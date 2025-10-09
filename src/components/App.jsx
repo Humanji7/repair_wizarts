@@ -11,6 +11,9 @@ import ClientSettingsWrap from './pages/ClientSettingsWrap';
 import MasterSettingsWrap from './pages/MasterSettingsWrap';
 
 import RegistrationMasterPage from '../features/RegistrationPage/RegistrationMasterPage/RegistrationMasterPage';
+import LoginPage from '../features/LoginPage/LoginPage';
+import RegistrationPickPage from '../features/RegistrationPage/RegistrationPickPage/RegistrationPickPage';
+import RegistrationUserPage from '../features/RegistrationPage/RegistrationUserPage/RegistrationUserPage';
 
 // Order imports
 import AllOrders from './Orders/Allorders';
@@ -36,7 +39,6 @@ import AddDevices from './addDevices/AddDevices';
 import AddedDevices from './addDevices/AddedDevices';
 import TitleService from './addDevices/TitleService';
 import Applications from './Applications/applications';
-import AuthLogin from './Registration/AuthLogin';
 import ClientRoute from './ClientRoute';
 import MasterRoute from './MasterRoute';
 import WalletConfirm from './ChoiceOfReplenishmentMethod/WalletConfirm';
@@ -71,8 +73,6 @@ import HomeV2 from './home_v2/HomeV2';
 import Mysuggest from './mysuggest';
 import MyOrder from './Orders/MyOrder';
 import ProfileFeedbackMaster from './profileNumberClient/ProfileFeedbackMaster';
-import PickLog from './Registration/pick-log';
-import Register from './Registration/register';
 import Remont from './remont';
 import { ServiceDetail } from './Service';
 import BalanceClient from './Settings/BalanceClient';
@@ -241,11 +241,11 @@ function App() {
                 <Route path="reviews" element={<Reviews />} />
                 <Route path="articles" element={<Articles />} />
                 <Route path="contact" element={<MapMaster />} />
-                <Route path="login" element={<AuthLogin />} />
+                <Route path="login" element={<LoginPage />} />
                 <Route path="register">
-                  <Route index element={<PickLog />} />
+                  <Route index element={<RegistrationPickPage />} />
                   <Route path="master" element={<RegistrationMasterPage />} />
-                  <Route path="client" element={<Register />} />
+                  <Route path="client" element={<RegistrationUserPage />} />
                 </Route>
               </Route>
               <Route

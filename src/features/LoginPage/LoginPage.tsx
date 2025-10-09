@@ -7,6 +7,7 @@ import styles from './LoginPage.module.scss';
 import Error from "../../components/Error/Error";
 import { useLanguage } from '../../state/language';
 import {login} from "../../services/auth.service";
+import { setToken } from "../../services/token.service";
 import {
   keepUserAuthorized,
   recoverPassword,
@@ -14,6 +15,24 @@ import {
   recoverPasswordVerify
 } from "../../services/user.service";
 import {fetchUser} from "../../slices/user.slice";
+import appFetch from "../../utilities/appFetch";
+import type { AppDispatch } from "../../store";
+
+type LoginResponse = {
+  code?: string;
+  message?: string;
+  data?: {
+    token?: string;
+    u_hash?: string;
+  };
+  auth_user?: Record<string, unknown>;
+};
+
+type UserCarResponse = {
+  data?: {
+    car?: Record<string, { c_id?: number }>;
+  };
+};
 
 const RecoveryState = {
   IDLE: 0,
@@ -25,7 +44,7 @@ const LoginPage = () => {
   const text = useLanguage();
 
   // Оставила без изменений
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -89,19 +108,54 @@ const LoginPage = () => {
     e.preventDefault()
 
     try {
-      await login(phone, password)
+      const response = (await login(phone, password)) as LoginResponse;
 
-      if (keep) {
-        keepUserAuthorized(true)
-      } else {
-        keepUserAuthorized(false)
+      if (response?.code === "404") {
+        setError(text("Incorrect data"));
+        return;
       }
 
-      // @ts-ignore
+      const token = response?.data?.token;
+      const hash = response?.data?.u_hash;
+
+      if (!token || !hash) {
+        setError(text("Unable to process the request"));
+        return;
+      }
+
+      let carId: number | undefined;
+
+      try {
+        const profile = (await appFetch("user/authorized/car", {
+          body: {
+            u_hash: hash,
+            token,
+          },
+        })) as UserCarResponse;
+
+        const carEntries = Object.values(profile?.data?.car ?? {});
+        if (carEntries.length > 0) {
+          carId = carEntries[0]?.c_id;
+        }
+      } catch (profileError) {
+        console.error("Failed to fetch additional user data", profileError);
+      }
+
+      setToken({
+        hash,
+        token,
+        user: {
+          ...(response?.auth_user ?? {}),
+          ...(carId ? { c_id: carId } : {}),
+        },
+      });
+
+      keepUserAuthorized(keep);
+
       dispatch(fetchUser());
       navigate("/");
-    } catch (err) {
-      setError(text("Incorrect data"));
+    } catch (err: any) {
+      setError(err?.message ?? text("Incorrect data"));
     }
   };
 
