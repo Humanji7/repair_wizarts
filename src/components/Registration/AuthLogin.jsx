@@ -16,6 +16,7 @@ import {
   recoverPasswordVerify,
 } from '../../services/user.service';
 import appFetch from '../../utilities/appFetch';
+import PhoneInput, { isPhoneNumberComplete } from '../../shared/ui/PhoneInput/PhoneInput';
 
 const RecoveryState = {
   IDLE: 0,
@@ -28,7 +29,7 @@ function AuthLogin() {
   const navigate = useNavigate();
 
   const [error, setError] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+7(');
   const [password, setPassword] = useState('');
   const [keep, setKeep] = useState(false);
 
@@ -36,85 +37,17 @@ function AuthLogin() {
   const [recoveryError, setRecoveryError] = useState('');
   const [recoveryUser, setRecoveryUser] = useState('');
   const [recoveryPassword, setRecoveryPassword] = useState('');
-  const [recoveryPhone, setRecoveryPhone] = useState('');
+  const [recoveryPhone, setRecoveryPhone] = useState('+7(');
   const [recoveryCode, setRecoveryCode] = useState('');
-
-  const handleChange = (event) => {
-    // нельзя вводить не числа и больше 11 символов
-    const inputValue = event.target.value.slice(1);
-    if (/[^0-9()]/.test(inputValue) && inputValue !== '') {
-      setError(
-        'Вы ввели недопустимый символ. Пожалуйста, введите только цифры.',
-      );
-    }
-    // else if (inputValue.length > 16) {
-    //     setError('Обратите внимание на длину номера!');
-    // }
-    else {
-      setError('');
-    }
-
-    const n = correctPhoneNumder(event);
-    setPhone(n);
-    // setPhone(event.target.value);
-  };
-
-  function correctPhoneNumder(e) {
-    var text = e.target.value;
-    let new_text = text;
-    // стирание
-    if (text.length < phone.length) {
-      new_text = text;
-      if (new_text.length < 4) {
-        new_text = '';
-      }
-    }
-    // +7(988)-842-44-44
-    else if (text.length === 6) {
-      new_text = text + ')-';
-    } else if (text.length === 7) {
-      new_text = text.slice(0, -1) + ')-' + text.slice(-1);
-    } else if (text.length === 8) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length === 11) {
-      new_text = text + '-';
-    } else if (text.length === 12) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length === 14) {
-      new_text = text + '-';
-    } else if (text.length === 15) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length > 17) {
-      new_text = text.slice(0, 17);
-    } else {
-      new_text = text;
-    }
-    return new_text;
-  }
-
-  const setRecoveryPhoneHandler = (event) => {
-    // нельзя вводить не числа и больше 11 символов
-    const inputValue = event.target.value.slice(1);
-    if (/[^0-9()]/.test(inputValue) && inputValue !== '') {
-      setRecoveryError(
-        'Вы ввели недопустимый символ. Пожалуйста, введите только цифры.',
-      );
-    }
-    // else if (inputValue.length > 9) {
-    //     setRecoveryError('Обратите внимание на длину номера!');
-    // }
-    else {
-      setRecoveryError('');
-    }
-
-    // setRecoveryPhone(event.target.value);
-    const n = correctPhoneNumder(event);
-    setRecoveryPhone(n);
-  };
 
   const onSendPhone = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!isPhoneNumberComplete(recoveryPhone)) {
+      setRecoveryError('Введите полный номер телефона.');
+      return;
+    }
 
     return recoverPassword({ phone: recoveryPhone })
       .then((res) => {
@@ -161,6 +94,11 @@ function AuthLogin() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    if (!isPhoneNumberComplete(phone)) {
+      setError('Введите полный номер телефона.');
+      return;
+    }
+
     try {
       const response = await login(phone, password);
       const userProfile = await appFetch('user/authorized/car', {
@@ -200,26 +138,17 @@ function AuthLogin() {
       <form onSubmit={onSubmit}>
         {error && <div className="auth-err">{error}</div>}
         <div className="input_phone_wrap">
-          <input
-            // className="heheinput"
-            type="text"
+          <PhoneInput
             className={
               phone.length > 4 ? 'phone_input_accent' : 'phone_input_lite'
             }
             name="phone"
-            // placeholder="Телефон"
             value={phone}
-            onChange={handleChange}
+            onChange={(nextValue) => setPhone(nextValue)}
+            onValidationError={(message) => setError(message)}
             required
           />
         </div>
-        {/* <input
-                    type="text"
-                    value={phone}
-                    onChange={handleChange}
-                    placeholder="Телефон"
-                    required
-                /> */}
         <input
           type="password"
           placeholder="Пароль"
@@ -307,27 +236,19 @@ function AuthLogin() {
               )}
 
               <div className="input_phone_wrap_recovery">
-                <input
-                  // className="heheinput"
+                <PhoneInput
                   className={`password-recovery-form__input ${
                     recoveryPhone.length > 4
                       ? 'phone_input_accent'
                       : 'phone_input_lite'
                   }`}
-                  type="text"
-                  name="phone"
-                  // placeholder="Телефон"
+                  name="recovery-phone"
                   value={recoveryPhone}
-                  onChange={(e) => setRecoveryPhoneHandler(e)}
+                  onChange={(nextValue) => setRecoveryPhone(nextValue)}
+                  onValidationError={(message) => setRecoveryError(message)}
                   required
                 />
               </div>
-              {/* <input
-                                className="password-recovery-form__input"
-                                placeholder="Номер телефона"
-                                onChange={(e) => setRecoveryPhoneHandler(e)}
-                                value={recoveryPhone}
-                            /> */}
               <button className="password-recovery-form__button">
                 Отправить
               </button>

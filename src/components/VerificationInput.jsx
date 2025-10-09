@@ -10,9 +10,18 @@ import {
   sendPhoneVerificationCode,
 } from '../services/verification.service';
 import '../scss/verification-input.css';
+import PhoneInput from '../shared/ui/PhoneInput/PhoneInput';
 
 const VerificationInput = (props) => {
-  const { isConfirmed, isEmail, onChangeMask, value } = props;
+  const {
+    isConfirmed,
+    isEmail,
+    onChangeMask,
+    onValidationError,
+    value = '',
+    onChange,
+    ...rest
+  } = props;
 
   const sendCode = isEmail ? sendEmailCode : sendPhoneCode;
   const sendVerificationCode = isEmail
@@ -36,13 +45,32 @@ const VerificationInput = (props) => {
 
   return (
     <div className="mail-input">
-      <input
-        disabled={!isEmail}
-        className="mail-input__input"
-        placeholder={isEmail ? 'Электронная почта' : 'Телефон'}
-        {...(isEmail ? { value } : {})}
-        onChange={onChangeMask}
-      />
+      {isEmail ? (
+        <input
+          className="mail-input__input"
+          placeholder="Электронная почта"
+          value={value}
+          onChange={(event) => {
+            onChange?.(event);
+            onChangeMask?.(event);
+          }}
+          {...rest}
+        />
+      ) : (
+        <PhoneInput
+          className="mail-input__input"
+          placeholder="Телефон"
+          value={value}
+          onChange={(nextValue) => {
+            onChange?.(nextValue);
+            if (typeof onChangeMask === 'function') {
+              onChangeMask({ target: { value: nextValue } });
+            }
+          }}
+          onValidationError={onValidationError}
+          {...rest}
+        />
+      )}
       {!isConfirmed && (
         <>
           <button

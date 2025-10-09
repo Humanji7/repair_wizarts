@@ -19,6 +19,7 @@ import { deleteUser } from '../../services/user.service';
 import { selectUI, setAuthorization } from '../../slices/ui.slice';
 import { selectUser } from '../../slices/user.slice';
 import VerificationInput from '../VerificationInput';
+import { isPhoneNumberComplete } from '../../shared/ui/PhoneInput/PhoneInput';
 
 const EMPTY_OBJECT = {}
 
@@ -35,7 +36,7 @@ export default function SettingsMaster() {
     Object.values(useSelector(selectUser)?.data?.user || EMPTY_OBJECT)[0] || EMPTY_OBJECT;
   const ui = useSelector(selectUI);
 
-  const [mask_value, setMask_value] = useState('+7(9');
+  const [phoneValidationError, setPhoneValidationError] = useState('');
 
   const [form, setForm] = useState({
     phone: '',
@@ -50,54 +51,34 @@ export default function SettingsMaster() {
     },
   });
 
-  function correctPhoneNumder(e) {
-    var text = e.target.value;
-    let new_text = text;
-    // стирание
-    if (text.length < mask_value.length) {
-      new_text = text;
-      if (new_text.length < 4) {
-        new_text = '+7(9';
-      }
-    }
-    // +7(988)-842-44-44
-    else if (text.length === 6) {
-      new_text = text + ')-';
-    } else if (text.length === 7) {
-      new_text = text.slice(0, -1) + ')-' + text.slice(-1);
-    } else if (text.length === 8) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length === 11) {
-      new_text = text + '-';
-    } else if (text.length === 12) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length === 14) {
-      new_text = text + '-';
-    } else if (text.length === 15) {
-      new_text = text.slice(0, -1) + '-' + text.slice(-1);
-    } else if (text.length > 17) {
-      new_text = text.slice(0, 17);
-    } else {
-      new_text = text;
-    }
-
-    setMask_value(new_text);
-  }
-
   const getFormAttrs = (field) => {
     const attrs = {};
 
-    attrs.value = form[field];
-    attrs.onChange = (e) => correctPhoneNumder(e);
+    attrs.value = form[field] || '';
+    attrs.onChange = (valueOrEvent) => {
+      const nextValue =
+        typeof valueOrEvent === 'string'
+          ? valueOrEvent
+          : valueOrEvent?.target?.value ?? '';
+
+      setForm((prev) => ({ ...prev, [field]: nextValue }));
+    };
 
     return attrs;
   };
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (form.phone && !isPhoneNumberComplete(form.phone)) {
+      setPhoneValidationError('Введите полный номер телефона.');
+      return;
+    }
+
     updateUser(form, user.id)
       .then((v) => {
         setSuceeded(true);
         setError('');
+        setPhoneValidationError('');
       })
       .catch((err) => {
         setError(err.message);
@@ -192,7 +173,11 @@ export default function SettingsMaster() {
             {suceeded && (
               <div className="succeed-v">Данные успешно обновлены</div>
             )}
-            {error && <div className={`auth-err ${style.error}`}>{error}</div>}
+            {(phoneValidationError || error) && (
+              <div className={`auth-err ${style.error}`}>
+                {phoneValidationError || error}
+              </div>
+            )}
 
             <input
               value={form.details.login}
@@ -208,17 +193,14 @@ export default function SettingsMaster() {
               <VerificationInput
                 isConfirmed={user.is_phone_verified}
                 {...getFormAttrs('phone')}
-                value={form.phone || ''}
-                onChangeMask={correctPhoneNumder}
+                onValidationError={(message) =>
+                  setPhoneValidationError(message)
+                }
               />
             </div>
             <VerificationInput
               isEmail
               isConfirmed={user.is_email_verified}
-              value={form.email || ''}
-              onChangeMask={(e) =>
-                setForm((prev) => ({ ...prev, email: e.target.value }))
-              }
               {...getFormAttrs('email')}
             />
             <div className="height">
