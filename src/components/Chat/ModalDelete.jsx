@@ -1,27 +1,33 @@
-import style from "./ModalDelete.module.css"
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
+export default function ModalDelete({ setVisibleModalDelete, setVisibleConfirmOrderFinal, onConfirm }) {
+  const close = () => setVisibleModalDelete(false);
 
+  const handleConfirm = () => {
+    close();
+    setVisibleConfirmOrderFinal?.(true);
+    onConfirm?.();
+  };
 
-export default function ModalDelete({ setVisibleModalDelete, setVisibleConfirmOrderFinal }) {
-
-    return (
-        <>
-            <div className={style.wrap}>
-                <div className={style.block}>
-                    <div className={style.close}  onClick={()=>setVisibleModalDelete(false)}>
-                        <img src="/img/close.svg" alt="" />
-                    </div>
-                    <p className={style.message}>
-                        Вы желаете удалить отзыв?
-                    </p>
-
-                    <div className={style.buttons}>
-                        <div className={style.button} onClick={()=>{setVisibleModalDelete(false)}}>Да</div>
-                        <div className={style.button_back} onClick={()=>setVisibleModalDelete(false)}>Нет</div>
-                    </div>
-                </div>
-            </div>
-            
-        </>
-    )
+  return (
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Вы желаете удалить отзыв?"
+      actions={[
+        {
+          id: 'no',
+          label: 'Нет',
+          variant: 'secondary',
+          onClick: close,
+        },
+        {
+          id: 'yes',
+          label: 'Да',
+          variant: 'danger',
+          onClick: handleConfirm,
+        },
+      ]}
+    />
+  );
 }

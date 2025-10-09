@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import style from './AddFeedbackModal.module.css';
+import SimpleDialog from '../../../shared/ui/SimpleDialog/SimpleDialog';
 import { createRequest } from '../../../services/request.service';
 import appFetch from '../../../utilities/appFetch';
+import style from './AddFeedbackModal.module.css';
 
-// Вспомогательная функция для преобразования файла в base64
 const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -12,7 +12,7 @@ const fileToBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-// Функция для загрузки фото
+
 const uploadPhoto = async (file) => {
   try {
     const base64String = await fileToBase64(file);
@@ -41,17 +41,17 @@ const uploadPhoto = async (file) => {
 export default function AddFeedbackModal({
   setVisibleAddFeedback,
   setVisibleFinalOrder,
-  id, // <-- идентификатор заказа/поездки
+  id,
 }) {
   const [countStar, setCountStar] = useState(0);
   const [comment, setComment] = useState('');
   const [photos, setPhotos] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [dialog, setDialog] = useState({ isOpen: false, message: '' });
 
   const handleSubmit = async () => {
     setIsUploading(true);
     try {
-      // Загрузка всех фото
       const photoUrls = [];
       for (const photo of photos) {
         if (photo.file) {
@@ -78,11 +78,11 @@ export default function AddFeedbackModal({
         setVisibleAddFeedback(false);
         setVisibleFinalOrder(true);
       } else {
-        alert('Ошибка при отправке отзыва');
+        setDialog({ isOpen: true, message: 'Ошибка при отправке отзыва' });
       }
     } catch (error) {
       console.error(error);
-      alert('Произошла ошибка сети');
+      setDialog({ isOpen: true, message: 'Произошла ошибка сети' });
     } finally {
       setIsUploading(false);
     }
@@ -90,11 +90,21 @@ export default function AddFeedbackModal({
 
   return (
     <div className={style.wrap}>
+      <SimpleDialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ isOpen: false, message: '' })}
+        title={dialog.message}
+        actions={[
+          {
+            id: 'ok',
+            label: 'Закрыть',
+            variant: 'primary',
+            onClick: () => setDialog({ isOpen: false, message: '' }),
+          },
+        ]}
+      />
       <div className={style.block}>
-        <div
-          className={style.close}
-          onClick={() => setVisibleAddFeedback(false)}
-        >
+        <div className={style.close} onClick={() => setVisibleAddFeedback(false)}>
           <img src="/img/close.svg" alt="" />
         </div>
 
@@ -120,7 +130,7 @@ export default function AddFeedbackModal({
             rows={8}
             placeholder="В тексте не должно быть оскорблений и мата."
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(event) => setComment(event.target.value)}
           />
         </div>
 
@@ -134,8 +144,8 @@ export default function AddFeedbackModal({
                 accept="image/*"
                 multiple
                 style={{ display: 'none' }}
-                onChange={(e) => {
-                  const files = Array.from(e.target.files);
+                onChange={(event) => {
+                  const files = Array.from(event.target.files);
                   const newPhotos = files.map((file) => ({
                     file,
                     url: URL.createObjectURL(file),

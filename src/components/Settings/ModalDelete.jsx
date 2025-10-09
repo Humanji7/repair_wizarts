@@ -1,29 +1,31 @@
-import style from "./ModalDelete.module.css"
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
+export default function ModalDelete({ setVisibleDelete, onConfirm }) {
+  const close = () => setVisibleDelete(false);
 
-
-export default function ModalDelete({ setVisibleDelete }) {
-
-   
-
-    return (
-        <>
-            <div className={style.wrap}>
-                <div className={style.block}>
-                    <div className={style.close}  onClick={()=>setVisibleDelete(false)}>
-                        <img src="/img/close.svg" alt="" />
-                    </div>
-
-                    <h2 className={style.heading}>Удаление кошелька </h2>
-                    <p>Удалить кошелек?</p>
-                    <div className={style.buttons_row}>
-                        <button className={style.button_back} onClick={()=>setVisibleDelete(false)}>Отмена</button>
-                        <button className={style.button}>Удалить</button>
-                    </div>
-     
-                </div>
-            </div>
-            
-        </>
-    )
+  return (
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Удаление кошелька"
+      description="Удалить кошелек?"
+      actions={[
+        {
+          id: 'cancel',
+          label: 'Отмена',
+          variant: 'secondary',
+          onClick: close,
+        },
+        {
+          id: 'delete',
+          label: 'Удалить',
+          variant: 'danger',
+          onClick: () => {
+            close();
+            onConfirm?.();
+          },
+        },
+      ]}
+    />
+  );
 }

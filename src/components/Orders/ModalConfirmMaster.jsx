@@ -1,40 +1,28 @@
 import { useNavigate } from 'react-router-dom';
 
-import style from './ModalConfirmMaster.module.css';
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
-export default function ModalConfirmMaster({
-  setVisibleModalConfirmMaster,
-  id,
-}) {
-  const navigator = useNavigate();
+export default function ModalConfirmMaster({ setVisibleModalConfirmMaster, id }) {
+  const navigate = useNavigate();
+  const close = () => setVisibleModalConfirmMaster(false);
+
   return (
-    <>
-      <div className={style.wrap}>
-        <div className={style.block}>
-          <div
-            className={style.close}
-            onClick={() => setVisibleModalConfirmMaster(false)}
-          >
-            <img src="/img/close.svg" alt="" />
-          </div>
-          <p className={style.message}>Вы подтвердили производителя работ</p>
-          <p style={{ textAlign: 'center', marginBottom: '20px' }}>
-            Подтверждая исполнителя вы открываете с ним диалог в чате
-          </p>
-
-          <div className={style.buttons}>
-            <div
-              className={style.button}
-              onClick={() => {
-                setVisibleModalConfirmMaster(false);
-                navigator('/client/chat/' + id);
-              }}
-            >
-              Ок
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Вы подтвердили исполнителя"
+      description="Подтверждая исполнителя, вы открываете с ним диалог в чате."
+      actions={[
+        {
+          id: 'ok',
+          label: 'Ок',
+          variant: 'primary',
+          onClick: () => {
+            close();
+            navigate('/client/chat/' + id);
+          },
+        },
+      ]}
+    />
   );
 }

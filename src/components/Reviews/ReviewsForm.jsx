@@ -1,68 +1,59 @@
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Rating } from 'react-simple-star-rating'
-import { Popup } from 'reactjs-popup'
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Rating } from 'react-simple-star-rating';
 
-import styles from './Reviews.module.css'
-import { createReview } from '../../services/reviews.service'
-import { selectUser } from '../../slices/user.slice'
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
+import { createReview } from '../../services/reviews.service';
+import { selectUser } from '../../slices/user.slice';
+import styles from './Reviews.module.css';
 
-const ReviewsForm = (props) => {
-    const user = useSelector(selectUser)
+const ReviewsForm = () => {
+  const user = useSelector(selectUser);
 
-    const [modalOpen, setModalOpen] = useState(false)
-    const openModal = () => setModalOpen(true)
-    const closeModal = () => setModalOpen(false)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState('');
 
-    const [rating, setRating] = useState(0)
-    const onRatingChange = (value) => setRating(value)
-    const [message, setMessage] = useState("")
-    const onMessageChange = (e) => setMessage(e.target.value)
+  const closeModal = () => setModalOpen(false);
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+  const onSubmit = (event) => {
+    event.preventDefault();
 
-        return createReview({
-            rating,
-            message,
-            sender: `${user.name} ${user.lastname}`
-        }).then(() => openModal())
-    }
+    return createReview({
+      rating,
+      message,
+      sender: `${user.name} ${user.lastname}`,
+    }).then(() => setModalOpen(true));
+  };
 
-    return (
-        <form className={styles.form} onSubmit={onSubmit}>
-            <Popup open={modalOpen} onClose={closeModal}>
-                <div className={styles.formModal}>
-                    <h3 className={styles.formModalTitle}>Ваш отзыв отправлен на модерацию</h3>
-                    <button
-                        className={styles.formModalButton}
-                        onClick={closeModal}
-                    >
-                        Закрыть
-                    </button>
-                </div>
-            </Popup>
-            <h3 className={styles.formTitle}>Оценка и комментарий</h3>
-            <Rating
-                onClick={onRatingChange}
-                initialValue={rating}
-                size="32"
-            />
-            <textarea
-                className={styles.formInput}
-                value={message}
-                onChange={onMessageChange}
-                placeholder="Введите отзыв без оскорблений и нецензурной лексики"
-            />
-            <button
-                className={styles.formSubmit}
-                onClick={()=>setModalOpen(true)}
-                type="submit"
-            >
-                Отправить
-            </button>
-        </form>
-    )
-}
+  return (
+    <form className={styles.form} onSubmit={onSubmit}>
+      <SimpleDialog
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title="Ваш отзыв отправлен на модерацию"
+        actions={[
+          {
+            id: 'close',
+            label: 'Закрыть',
+            variant: 'primary',
+            onClick: closeModal,
+          },
+        ]}
+      />
+      <h3 className={styles.formTitle}>Оценка и комментарий</h3>
+      <Rating onClick={setRating} initialValue={rating} size="32" />
+      <textarea
+        className={styles.formInput}
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+        placeholder="Введите отзыв без оскорблений и нецензурной лексики"
+      />
+      <button className={styles.formSubmit} type="submit">
+        Отправить
+      </button>
+    </form>
+  );
+};
 
-export default ReviewsForm
+export default ReviewsForm;

@@ -1,4 +1,4 @@
-import style from './ModalConfirmPause.module.css';
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
 export default function ModalConfirmPause({
   setVisibleAddFeedback,
@@ -6,43 +6,36 @@ export default function ModalConfirmPause({
   StatusEnum,
   onClick,
 }) {
+  const close = () => setVisibleAddFeedback(false);
+
+  const handleConfirm = () => {
+    close();
+    if (setStatus && StatusEnum?.PAUSED) {
+      setStatus(StatusEnum.PAUSED);
+    }
+    onClick?.(StatusEnum?.PAUSED ?? 'PAUSED');
+  };
+
   return (
-    <>
-      <div className={style.wrap}>
-        <div className={style.block}>
-          <div
-            className={style.close}
-            onClick={() => setVisibleAddFeedback(false)}
-          >
-            <img src="/img/close.svg" alt="" />
-          </div>
-          <h2 className={style.heading}>Подтверждение остановки</h2>
-
-          <p className={style.text}>
-            Подтверждение остановки Вы подтверждаете остановку проекта?
-            Исполнители не смогут больше добавлять в него свои предложения.
-          </p>
-
-          <div className={style.buttons}>
-            <div
-              className={style.button_back}
-              onClick={() => setVisibleAddFeedback(false)}
-            >
-              Отмена
-            </div>
-            <div
-              className={style.button}
-              onClick={(e) => {
-                setVisibleAddFeedback(false);
-                setStatus(StatusEnum.PAUSED);
-                onClick(StatusEnum.PAUSED);
-              }}
-            >
-              Остановить
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Подтверждение остановки"
+      description="Вы подтверждаете остановку проекта? Исполнители не смогут больше добавлять в него свои предложения."
+      actions={[
+        {
+          id: 'cancel',
+          label: 'Отмена',
+          variant: 'secondary',
+          onClick: close,
+        },
+        {
+          id: 'confirm',
+          label: 'Остановить',
+          variant: 'primary',
+          onClick: handleConfirm,
+        },
+      ]}
+    />
   );
 }

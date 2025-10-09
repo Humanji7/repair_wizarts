@@ -38,6 +38,7 @@ import DisputeModalV2 from './DisputeModal_v2';
 import DisputeFinalModalV2 from './DisputeFinalModal';
 import { updateRequest } from '../../../services/request.service';
 import FrameMessages from './frameMessages';
+import SimpleDialog from '../../../shared/ui/SimpleDialog/SimpleDialog';
 
 const LazySwiper = React.lazy(() => import('../../../shared/ui/SwiperWrapper').then(m => ({ default: m.SwiperWithModules })));
 const LazySwiperSlide = React.lazy(() => import('../../../shared/ui/SwiperWrapper').then(m => ({ default: m.SwiperSlide })));
@@ -853,6 +854,19 @@ const OrderDetailsBlock: FC<OrderDetailsBlockProps> = ({
 
   return (
     <>
+      <SimpleDialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ isOpen: false, message: '' })}
+        title={dialog.message}
+        actions={[
+          {
+            id: 'close-dialog',
+            label: 'Закрыть',
+            variant: 'primary',
+            onClick: () => setDialog({ isOpen: false, message: '' }),
+          },
+        ]}
+      />
       {isVisibleAddFeedback && (
         <AddFeedbackModal
           id={order.b_id}
@@ -1277,6 +1291,10 @@ function ChoiceOfReplenishmentMethodCard() {
   const [BalanceErrorNum, setBalanceErrorNum] = useState(0);
   const [isOkModal, setVisibleOkModal] = useState(false);
   const [isVisibleBlock, setIsVisibleBlock] = useState(false);
+  const [dialog, setDialog] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: '',
+  });
   const [zayavka__isVisibleDispute, zayavka__setVisibleDispute] =
     useState(false);
   const [zayavka__isVisibleDisputeFinal, zayavka__setisVisibleDisputeFinal] =
@@ -1511,7 +1529,7 @@ function ChoiceOfReplenishmentMethodCard() {
             setPreviewFiles((prev) => [...prev, { file, url }]);
           } catch (e) {
             console.error('audio save error', e);
-            alert('Не удалось сохранить аудио.');
+            setDialog({ isOpen: true, message: 'Не удалось сохранить аудио.' });
           } finally {
             setRecState('idle');
             stream.getTracks().forEach((t) => t.stop());
@@ -1521,7 +1539,7 @@ function ChoiceOfReplenishmentMethodCard() {
         setRecState('recording');
       } catch (e) {
         console.error('mic error', e);
-        alert('Нет доступа к микрофону.');
+        setDialog({ isOpen: true, message: 'Нет доступа к микрофону.' });
       }
     } else if (recState === 'recording') {
       mediaRecorderRef.current?.stop();
@@ -1558,7 +1576,7 @@ function ChoiceOfReplenishmentMethodCard() {
       }
     } catch (e) {
       console.error('sendChatMessage error', e);
-      alert('Не удалось отправить сообщение.');
+      setDialog({ isOpen: true, message: 'Не удалось отправить сообщение.' });
     }
   }
 
@@ -1686,6 +1704,19 @@ function ChoiceOfReplenishmentMethodCard() {
 
   return (
     <>
+      <SimpleDialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ isOpen: false, message: '' })}
+        title={dialog.message}
+        actions={[
+          {
+            id: 'close-dialog',
+            label: 'Закрыть',
+            variant: 'primary',
+            onClick: () => setDialog({ isOpen: false, message: '' }),
+          },
+        ]}
+      />
       {zayavka__isVisibleDispute ? (
         <DisputeModalV2
           refetchRequests={userRequests.refetch}

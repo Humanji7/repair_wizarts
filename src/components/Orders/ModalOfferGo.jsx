@@ -1,27 +1,28 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 
-import style from "./ModalDelete.module.css"
-
-
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
 export default function ModalOfferGo({ setVisibleModalGo }) {
+  const navigate = useNavigate();
 
-    const navigator = useNavigate()
-    return (
-        <>
-            <div className={style.wrap}>
-                <div className={style.block}>
-                    <div className={style.close}  onClick={()=>setVisibleModalGo(false)}>
-                        <img src="/img/close.svg" alt="" />
-                    </div>
-                    <p className={style.message}>Ваше индивидуальное предложение отправлено</p>
+  const close = () => setVisibleModalGo(false);
 
-                    <div className={style.buttons}>
-                        <div className={style.button} onClick={()=>{setVisibleModalGo(false); navigator("/master/requests")}}>Хорошо</div>
-                    </div>
-                </div>
-            </div>
-            
-        </>
-    )
+  return (
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Ваше индивидуальное предложение отправлено"
+      actions={[
+        {
+          id: 'ok',
+          label: 'Хорошо',
+          variant: 'primary',
+          onClick: () => {
+            close();
+            navigate('/master/requests');
+          },
+        },
+      ]}
+    />
+  );
 }

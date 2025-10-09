@@ -1,37 +1,32 @@
-import style from './ModalDelete.module.css';
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
 export default function ModalDelete({ setVisibleDeleteModal, onDelete }) {
-  return (
-    <>
-      <div className={style.wrap}>
-        <div className={style.block}>
-          <div
-            className={style.close}
-            onClick={() => {
-              setVisibleDeleteModal(false);
-              onDelete();
-            }}
-          >
-            <img src="/img/close.svg" alt="" />
-          </div>
-          <p className={style.message}>Подтверждаете удаление?</p>
+  const close = () => setVisibleDeleteModal(false);
 
-          <div className={style.buttons}>
-            <div
-              className={style.button_back}
-              onClick={() => setVisibleDeleteModal(false)}
-            >
-              Отмена
-            </div>
-            <div
-              className={style.button}
-              onClick={() => setVisibleDeleteModal(false)}
-            >
-              Удалить
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+  const handleConfirm = () => {
+    close();
+    onDelete?.();
+  };
+
+  return (
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Подтверждаете удаление?"
+      actions={[
+        {
+          id: 'cancel',
+          label: 'Отмена',
+          variant: 'secondary',
+          onClick: close,
+        },
+        {
+          id: 'delete',
+          label: 'Удалить',
+          variant: 'danger',
+          onClick: handleConfirm,
+        },
+      ]}
+    />
   );
 }

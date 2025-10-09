@@ -1,17 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
+import appFetch from '../../utilities/appFetch';
 import ModalOfferGo from './ModalOfferGo';
 import style from './OrderRow.module.css';
-import appFetch from '../../utilities/appFetch';
 
-// Компонент для отображения dropbox-фото через POST-запрос
 const DropboxImage = ({ url, alt = '', style: imgStyle }) => {
-  const [imgUrl, setImgUrl] = useState(
-    url && url.startsWith('blob:') ? url : null,
-  );
+  const [imgUrl, setImgUrl] = useState(url && url.startsWith('blob:') ? url : null);
   const [error, setError] = useState(false);
   const urlRef = useRef(null);
 
@@ -22,7 +19,6 @@ const DropboxImage = ({ url, alt = '', style: imgStyle }) => {
       setImgUrl(url);
       return;
     }
-    // Получаем id из url
     const match = url.match(/\/dropbox\/file\/(\d+)/);
     const id = match ? match[1] : null;
     if (!id) return;
@@ -104,7 +100,8 @@ export default function OrderRowOffer({
   const [comment, setComment] = useState('');
   const [price, setPrice] = useState('');
   const [time, setTime] = useState('');
-  console.log(images);
+  const [dialog, setDialog] = useState({ isOpen: false, message: '', variant: 'primary' });
+
   const openModal = (imageSrc) => {
     setModalImage(imageSrc);
     setIsModalOpen(true);
@@ -112,10 +109,15 @@ export default function OrderRowOffer({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const showDialog = (message, variant = 'primary') => {
+    setDialog({ isOpen: true, message, variant });
+  };
+
   const handleSubmit = async () => {
     try {
       if (!comment || !price || !time) {
-        alert('Пожалуйста, заполните все поля');
+        showDialog('Пожалуйста, заполните все поля', 'danger');
         return;
       }
 
@@ -126,9 +128,8 @@ export default function OrderRowOffer({
       };
       let isHasBind;
       if (isHasBind) {
-        alert('Вы уже отправили заявку');
+        showDialog('Вы уже отправили заявку', 'secondary');
       } else {
-        console.log(user);
         isHasBind = await appFetch(`/drive/get/${b_id}`, {
           body: {
             u_a_role: 2,
@@ -153,23 +154,33 @@ export default function OrderRowOffer({
           },
         });
       }
-      console.log(isHasBind);
-      console.log('Успешно отправлено предложение!');
       setVisibleModalGo(true);
     } catch (error) {
       console.error('Ошибка при отправке:', error);
-      alert(error.message || 'Ошибка при отправке предложения');
+      showDialog(error.message || 'Ошибка при отправке предложения', 'danger');
     }
   };
 
   return (
     <>
+      <SimpleDialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ isOpen: false, message: '', variant: 'primary' })}
+        title={dialog.message}
+        actions={[
+          {
+            id: 'ok',
+            label: 'Закрыть',
+            variant: dialog.variant === 'danger' ? 'secondary' : 'primary',
+            onClick: () => setDialog({ isOpen: false, message: '', variant: 'primary' }),
+          },
+        ]}
+      />
       {visibleModalGo && <ModalOfferGo setVisibleModalGo={setVisibleModalGo} />}
 
       <div className={style.order_row}>
         <div className={style.left}>
           <div className={style.profile}>
-            {/* <img src={profileImage} alt="Профиль" /> */}
             <div className={style.profile__col}>
               <p className={style.name}>{userName}</p>
               <p>Размещено проектов на бирже {projectsPosted}</p>
@@ -209,7 +220,6 @@ export default function OrderRowOffer({
                 <div
                   onClick={() => {
                     openModal(src);
-                    console.log('e', src);
                   }}
                   style={{ cursor: 'pointer', width: '100%', height: '100%' }}
                 >
@@ -218,187 +228,65 @@ export default function OrderRowOffer({
                     alt={deviceName}
                     imgStyle={{
                       width: '100%',
-                      height: 120,
+                      height: '100%',
                       objectFit: 'cover',
-                      borderRadius: 8,
+                      borderRadius: '8px',
                     }}
                   />
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
-          <button
-            className={style.button}
-            onClick={() => setVisibleBlock(true)}
-          >
-            Предложить услугу
-          </button>
+
+          <div className={style.button_block}>
+            <button className={style.button} onClick={() => setVisibleBlock(!visibleBlock)}>
+              Моё предложение
+            </button>
+          </div>
         </div>
       </div>
 
       {visibleBlock && (
-        <>
-          <p className={style.heading}>Предложить услугу</p>
-          <form
-            className={style.comment_wrap2}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            <div className={style.comment_block}>
-              <div className={style.icon_chat2}>
-                <img src="/img/chat.png" alt="" />
-              </div>
-              {/* <div className={style.error}>
-          Пожалуйста пополните баланс на 100 рублей
-        </div> */}
-
-              <textarea
-                style={{ marginBottom: '30px' }}
-                className={style.comment__input}
-                rows={4}
-                placeholder="Напишите как вы почините устройства клиента.."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+        <div className={style.comment_wrap}>
+          <textarea
+            className={style.comment__input}
+            rows={4}
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+            placeholder="сообщение.."
+          />
+          <div className={style.table}>
+            <div className={style.row_fields}>
+              <input
+                className={style.input}
+                placeholder="Стоимость"
+                value={price}
+                onChange={(event) => setPrice(event.target.value)}
               />
-
-              <div className={style.last_row}>
-                <img className={style.dollar_img} src="/img/baks.png" alt="" />
-                <div className={style.price_block}>
-                  <label className={style.label_price} htmlFor="price">
-                    Стоимость
-                  </label>
-                  <input
-                    className={style.input_price}
-                    placeholder="укажите стоимость"
-                    type="text"
-                    id="price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
-                  <img src="/img/simvol_rubl.png" alt="" />
-                </div>
-
-                <div className={style.timer_block}>
-                  <img src="/img/timer.png" alt="" />
-                  <select
-                    className={style.select_timer}
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                  >
-                    <option value="">Выберите</option>
-                    <option value="ready">Готов выехать</option>
-                    <option value="1">1 час</option>
-                    <option value="2">2 часа</option>
-                    <option value="3">3 часа</option>
-                    <option value="4">4 часа</option>
-                    <option value="6">6 часов</option>
-                    <option value="8">8 часов</option>
-                    <option value="24">24 часа</option>
-                    <option value="72">3 дня</option>
-                    <option value="168">7 дней</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={style.flex_row}>
-                <button type="submit" className={style.button_go}>
-                  Продолжить
-                </button>
-              </div>
+              <input
+                className={style.input}
+                placeholder="Срок"
+                value={time}
+                onChange={(event) => setTime(event.target.value)}
+              />
             </div>
-          </form>
-        </>
-      )}
-
-      {isModalOpen && (
-        <div className="modal" onClick={closeModal}>
-          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-            <button className="closeBtn" onClick={closeModal}>
-              &times;
+            <button className={style.button} onClick={handleSubmit}>
+              Отправить предложение
             </button>
-            <Swiper
-              initialSlide={images.indexOf(modalImage)}
-              navigation={true}
-              modules={[Navigation]}
-              className="modalSwiper"
-            >
-              {images.map((image, index) => (
-                <SwiperSlide key={index}>
-                  <div className="modal-content-info">
-                    <DropboxImage
-                      url={image}
-                      alt={`Slide ${index + 1}`}
-                      imgStyle={{ maxHeight: '80vh', maxWidth: '100%' }}
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
           </div>
         </div>
       )}
 
-      <style jsx>{`
-        .modal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.8);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 9999;
-        }
-        .modalContent {
-          position: relative;
-          padding: 20px;
-          background: white;
-          width: 60%;
-          height: 80%;
-          overflow: hidden;
-        }
-        .modal-content-info {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-        }
-        .modal img {
-          width: auto;
-          height: 80%;
-        }
-        .closeBtn {
-          position: absolute;
-          right: 10px;
-          top: 0px;
-          font-size: 30px;
-          background: none;
-          border: none;
-          color: #333;
-          cursor: pointer;
-        }
-        .closeBtn:hover {
-          color: red;
-        }
-        .modalSwiper {
-          width: 100%;
-          height: 100%;
-        }
-        @media screen and (max-width: 1000px) {
-          .modalContent {
-            height: 50% !important;
-          }
-          .modal img {
-            width: 100% !important;
-            height: auto !important;
-          }
-        }
-      `}</style>
+      {isModalOpen && (
+        <div className="modal" onClick={closeModal}>
+          <div className="modal-content" onClick={(event) => event.stopPropagation()}>
+            <img src={modalImage} alt="" className="modal-image" />
+            <button className="closeBtn" onClick={closeModal}>
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

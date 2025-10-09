@@ -1,24 +1,26 @@
-import style from "./ModalSuccess.module.css"
-
-
+import SimpleDialog from '../../shared/ui/SimpleDialog/SimpleDialog';
 
 export default function ModalSuccess({ setVisibleSuccess }) {
+  const close = () => setVisibleSuccess(false);
 
-   
-
-    return (
-        <>
-            <div className={style.wrap}>
-                <div className={style.block}>
-                    <div className={style.close}  onClick={()=>setVisibleSuccess(false)}>
-                        <img src="/img/close.svg" alt="" />
-                    </div>
-                    <img src="/img/success.png" alt="" />
-                    <h2 className={style.heading}>Платежные реквизиты добавлены</h2>
-     
-                </div>
-            </div>
-            
-        </>
-    )
+  return (
+    <SimpleDialog
+      isOpen
+      onClose={close}
+      title="Платежные реквизиты добавлены"
+      description={
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <img src="/img/success.png" alt="Успех" style={{ width: 96, height: 'auto' }} />
+        </div>
+      }
+      actions={[
+        {
+          id: 'close',
+          label: 'Закрыть',
+          onClick: close,
+          variant: 'primary',
+        },
+      ]}
+    />
+  );
 }

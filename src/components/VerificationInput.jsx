@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Popup } from 'reactjs-popup';
+import { useEffect, useState } from 'react';
 
 import mailIcon from '../img/mail.png';
 import phoneIcon from '../img/mobile-phone.png';
@@ -9,11 +8,10 @@ import {
   sendPhoneCode,
   sendPhoneVerificationCode,
 } from '../services/verification.service';
+import SimpleDialog from '../shared/ui/SimpleDialog/SimpleDialog';
 import '../scss/verification-input.css';
 
-const VerificationInput = (props) => {
-  const { isConfirmed, isEmail, onChangeMask, value } = props;
-
+const VerificationInput = ({ isConfirmed, isEmail, onChangeMask, value }) => {
   const sendCode = isEmail ? sendEmailCode : sendPhoneCode;
   const sendVerificationCode = isEmail
     ? sendEmailVerificationCode
@@ -23,14 +21,19 @@ const VerificationInput = (props) => {
   const [code, setCode] = useState('');
 
   useEffect(() => {
-    if (isModalOpen) sendCode().then((v) => console.log(v));
+    if (isModalOpen) {
+      sendCode().catch((error) => console.error(error));
+    }
   }, [isModalOpen, sendCode]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    sendVerificationCode(code).then((v) => {
-      console.log(v);
-      setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    setCode('');
+  };
+
+  const handleConfirm = () => {
+    sendVerificationCode(code).then(() => {
+      closeModal();
     });
   };
 
@@ -57,35 +60,41 @@ const VerificationInput = (props) => {
               alt=""
             />
           </button>
-          <Popup open={isModalOpen} onClose={() => setModalOpen(false)}>
-            <div className="mail-input__modal">
-              <button className="mail-input-modal__close"></button>
-              <div className="mail-input-modal__content">
-                <h3 className="mail-input-modal__title">Подтверждение почты</h3>
-                <p className="mail-input-modal__description">
-                  На вашу почту {'{email}'} пришло письмо с кодом подтверждения.
-                  Чтобы подтвердить аккаунт введите этот код в форму,
-                  находящуюся ниже.
-                </p>
-                <div className="mail-input-modal__form">
-                  <input
-                    className="mail-input-modal__input"
-                    value={code}
-                    placeholder="Код подтверждения"
-                    onChange={(e) =>
-                      e.target.value.length <= 6 && setCode(e.target.value)
-                    }
-                  />
-                  <button
-                    className="mail-input-modal__button"
-                    onClick={onSubmit}
-                  >
-                    Подтвердить
-                  </button>
-                </div>
-              </div>
+          <SimpleDialog
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            title={isEmail ? 'Подтверждение почты' : 'Подтверждение телефона'}
+            description={
+              <p className="mail-input-modal__description">
+                На вашу {isEmail ? 'почту' : 'почту/телефон'} пришел код подтверждения. Чтобы подтвердить аккаунт, введите этот код в форму ниже.
+              </p>
+            }
+            actions={[
+              {
+                id: 'cancel',
+                label: 'Отмена',
+                variant: 'secondary',
+                onClick: closeModal,
+              },
+              {
+                id: 'confirm',
+                label: 'Подтвердить',
+                variant: 'primary',
+                onClick: handleConfirm,
+              },
+            ]}
+          >
+            <div className="mail-input-modal__form">
+              <input
+                className="mail-input-modal__input"
+                value={code}
+                placeholder="Код подтверждения"
+                onChange={(event) =>
+                  event.target.value.length <= 6 && setCode(event.target.value)
+                }
+              />
             </div>
-          </Popup>
+          </SimpleDialog>
         </>
       )}
     </div>
