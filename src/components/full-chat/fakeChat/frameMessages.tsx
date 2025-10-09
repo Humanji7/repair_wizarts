@@ -103,7 +103,7 @@ function App() {
         </div>
         <div className="magnafire df align">
           <div className="magnafire_img">
-            <img src="/img/chat_img/лупа.png" alt="no img" />
+            <img src="/img/chat_img/lupa.png" alt="no img" />
           </div>
           <div className="magnafire_input">
             <input type="text" placeholder="Поиск..." />
