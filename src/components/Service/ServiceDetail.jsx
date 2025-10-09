@@ -5,13 +5,14 @@ import { useParams } from 'react-router-dom';
 import '../../scss/detail.scss';
 import '../../scss/media.css';
 //~ import { getMasterRepairs } from '../../services/service.service';
-import { Link } from 'react-router-dom';
-import { Rating } from 'react-simple-star-rating';
-import { Navigation } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
 import style from './serviceDetail.module.scss';
 import ServiceDetailContext from './ServiceDetailContext';
+import PaymentBlock from './components/PaymentBlock';
+import ConfirmBlock from './components/ConfirmBlock';
+import OrderModal from './components/OrderModal';
+import MasterInfoPanels from './components/MasterInfoPanels';
+import GalleryModal from './components/GalleryModal';
+import PriceCarousel from './components/PriceCarousel';
 import { createRequest } from '../../services/request.service';
 import { selectServices } from '../../slices/services.slice';
 import { selectUI } from '../../slices/ui.slice';
@@ -381,8 +382,6 @@ function ServiceDetail() {
     document.title = device.name;
   }, [device.name]);
 
-  const [goToR] = useState(false);
-
   function getSumPrice() {
     var sum = 0;
     selectedService.forEach((index) => {
@@ -440,119 +439,40 @@ function ServiceDetail() {
         })
       : [];
   });
+
+  const totalPrice = getSumPrice();
+
+  const handlePaymentClose = () => setVisibleBlockPayment(false);
+
+  const handlePaymentConfirm = () => {
+    setVisibleBlockPayment(false);
+    setVisibleConfirm(true);
+  };
+
+  const handleOrderModalClose = () => {
+    setFormError('');
+    setShow(false);
+  };
+
+  const toggleSelectedServicesVisibility = () => {
+    setVisibleListSelectedServices((prev) => !prev);
+  };
   return (
     <ServiceDetailContext.Provider value={selectedValue}>
-      {/* блок с оплатой */}
-      {visibleBlockPayment ? (
-        <div className={style.blockPayment_wrap}>
-          {errorBalance ? (
-            <div className={style.error}>
-              Пополните, пожалуйста, баланс на 500р
-            </div>
-          ) : null}
-
-          {errorCash ? (
-            <div className={style.error}>Оплатите мастеру при встрече</div>
-          ) : null}
-
-          {errorSumm ? (
-            <div className={style.error}>
-              С вашего баланса спишется 500 рублей{' '}
-            </div>
-          ) : null}
-
-          <div className={style.blockPayment}>
-            <div
-              className={style.close}
-              onClick={() => setVisibleBlockPayment(false)}
-            >
-              <img src="/img/close.svg" alt="" />
-            </div>
-
-            <h2>Оплата</h2>
-            <div className={style.row}>
-              <div className={style.block_v2}>
-                <p>Оплата через сайт</p>
-                <div className={style.radio}>
-                  <input
-                    type="radio"
-                    id="inputSite"
-                    name="radioPayments"
-                    checked={selectedIdx === 0}
-                    onChange={() => setSelectedIdx(0)}
-                  />
-                  <label htmlFor="inputSite">Баланс: 0р</label>
-                </div>
-                <p>Обычная цена сделки без риска</p>
-                <p className={style.mini_text}>
-                  + 9% при пополнение кошелька баланса. Цена в отклике
-                  исполнителя уже включает в себя комиссию
-                </p>
-              </div>
-
-              <div
-                className={style.block}
-                style={{ position: 'relative', top: '35px' }}
-              >
-                {/* <p>Оплата наличными</p> */}
-                <div className={style.radio}>
-                  <input
-                    type="radio"
-                    id="inputCash"
-                    name="radioPayments"
-                    checked={selectedIdx === 1}
-                    onChange={() => setSelectedIdx(1)}
-                  />
-                  <label htmlFor="inputCash">Оплата наличными</label>
-                </div>
-                <p className={style.mini_text}>
-                  Оплата напрямую исполнителю <br /> Без гарантий и компенсаций
-                  RepairWizarts: вы напрямую договариваетесь с исполнителем
-                  об условиях и способе оплаты.
-                </p>
-              </div>
-            </div>
-
-            <div
-              className={style.button_go}
-              onClick={() => {
-                setVisibleBlockPayment(false);
-                setVisibleConfirm(true);
-              }}
-            >
-              Перейти
-            </div>
-          </div>
-        </div>
-      ) : null}
-      {/* Вы подтвердили производителя работ  */}
-      {visibleConfirm ? (
-        <div className={style.blockConfirm_wrap}>
-          <div
-            className={style.blockPayment}
-            style={{ padding: '50px 50px 50px 50px' }}
-          >
-            <div
-              className={style.close}
-              onClick={() => setVisibleConfirm(false)}
-            >
-              <img src="/img/close.svg" alt="" />
-            </div>
-
-            <h2>Вы подтвердили производителя работ</h2>
-            <div className={style.row}>
-              <p>Подтверждая исполнителя вы открываете с ним диалог в чате</p>
-            </div>
-
-            <Link
-              to="/client/requests/my_orders/#order"
-              className={style.button_confirm}
-            >
-              Перейти
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <PaymentBlock
+        isOpen={visibleBlockPayment}
+        onClose={handlePaymentClose}
+        onConfirm={handlePaymentConfirm}
+        selectedIdx={selectedIdx}
+        onSelectMethod={setSelectedIdx}
+        errorBalance={errorBalance}
+        errorCash={errorCash}
+        errorSumm={errorSumm}
+      />
+      <ConfirmBlock
+        isOpen={visibleConfirm}
+        onClose={() => setVisibleConfirm(false)}
+      />
 
       <div>
         <section
@@ -573,10 +493,8 @@ function ServiceDetail() {
               />
             </div>
 
-            {/* блок с iphone */}
             <div className={`main__info__image ${style.iphone_mobile}`}>
               <img
-                // src={SERVER_PATH + device.picture}
                 className={style.iphone_mobile__img}
                 src="/img/detail-iphone.png"
                 alt=""
@@ -586,7 +504,7 @@ function ServiceDetail() {
                 окончательная цена
               </p>
             </div>
-            {/* блок, если не выбраны услуги */}
+
             {prices.length === 0 && (
               <div className="order__no-cards">
                 <img src="/img/many_people.png" alt="" />
@@ -598,55 +516,49 @@ function ServiceDetail() {
               </div>
             )}
 
-            {/* список услуг */}
             <div className={`order__cards__to__scrolls ${style.orders_list}`}>
               {prices.length > 0 &&
                 prices.map((obj, index) => (
-                  <>
-                    <div
-                      key={index}
-                      className={`first__s__card ${style.order_row}`}
-                    >
-                      <div className="main__info__content__card">
-                        <div className="main__card__first">
-                          <h4>Услуга</h4>
-                          <p>
-                            {obj['name']} {obj['model']}
-                          </p>
-                        </div>
-                        <div style={{ flex: 1 }}></div>
-                        <div
-                          className="main__card__price"
-                          style={{ whiteSpace: 'nowrap' }}
-                        >
-                          <p>{obj['price']} ₽</p>
-                        </div>
-                        <div className="main__card__second">
-                          <p>{obj['delivery']}</p>
-                          <button
-                            className="pickfaf"
-                            onClick={() => addRemoveService(index)}
-                          >
-                            {selectedService.includes(index)
-                              ? 'Убрать'
-                              : 'Выбрать'}
-                          </button>
-                        </div>
-                        <div
-                          className={`main__card__third ${
-                            selectedService.includes(index)
-                              ? 'main__card__third--active'
-                              : null
-                          }`}
-                        ></div>
+                  <div
+                    key={index}
+                    className={`first__s__card ${style.order_row}`}
+                  >
+                    <div className="main__info__content__card">
+                      <div className="main__card__first">
+                        <h4>Услуга</h4>
+                        <p>
+                          {obj.name} {obj.model}
+                        </p>
                       </div>
-                      <div className="main__card__third activeijpqwothweoruh"></div>
+                      <div style={{ flex: 1 }}></div>
+                      <div
+                        className="main__card__price"
+                        style={{ whiteSpace: 'nowrap' }}
+                      >
+                        <p>{obj.price} ₽</p>
+                      </div>
+                      <div className="main__card__second">
+                        <p>{obj.delivery}</p>
+                        <button
+                          className="pickfaf"
+                          onClick={() => addRemoveService(index)}
+                        >
+                          {selectedService.includes(index) ? 'Убрать' : 'Выбрать'}
+                        </button>
+                      </div>
+                      <div
+                        className={`main__card__third ${
+                          selectedService.includes(index)
+                            ? 'main__card__third--active'
+                            : null
+                        }`}
+                      ></div>
                     </div>
-                  </>
+                    <div className="main__card__third activeijpqwothweoruh"></div>
+                  </div>
                 ))}
             </div>
 
-            {/* Условный рендеринг кнопки "Оформить заказ" */}
             {selectedMaster.id && (
               <div className={style.button_wrap}>
                 <button
@@ -655,7 +567,6 @@ function ServiceDetail() {
                     setShow(true);
                   }}
                 >
-                  {' '}
                   Оформить заказ
                 </button>
               </div>
@@ -665,145 +576,28 @@ function ServiceDetail() {
               className="popupdetailfwpruhwe"
               style={show ? null : { display: 'none' }}
             >
-              <div className="modfdfsdafasal-content">
-                <div
-                  className={
-                    goToR
-                      ? 'modal-content oformitzayavka gomodaldetailfgg werwertttt'
-                      : 'modal-content oformitzayavka werwertttt'
-                  }
-                >
-                  <span
-                    onClick={() => {
-                      setFormError('');
-                      setShow(false);
-                    }}
-                  >
-                    <img className="close" src="/img/img-delete.png" alt="" />
-                  </span>
-                  <h1
-                    className="detailpopuptitle"
-                    style={{ paddingBottom: '10px' }}
-                  >
-                    Оформить заказ
-                  </h1>
-                  <p style={{ marginBottom: '10px' }}>Официальные цены</p>
-
-                  {!ui.isAuthorized ? (
-                    <div
-                      className="modfdfsdafasal-error"
-                      style={{ marginBottom: '10px' }}
-                    >
-                      Пожалуйста, зарегистрируйтесь или войдите
-                    </div>
-                  ) : null}
-
-                  <form onSubmit={onSubmit}>
-                    {formError && (
-                      <div className="auth-err" style={{ width: '100%' }}>
-                        {formError}
-                      </div>
-                    )}
-
-                    <div className={`df ${style.modal_from_row}`}>
-                      <input
-                        type="text"
-                        placeholder="Ваше имя"
-                        defaultValue={user.u_name}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        // disabled
-                      />
-                      <input
-                        className="ismrf"
-                        type="text"
-                        placeholder="Номер телефона"
-                        defaultValue={user.u_phone}
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        // disabled
-                      />
-                    </div>
-
-                    {/* список выбранных услуг */}
-                    <div className="selected_service">
-                      <div className="selected_service__heading">
-                        <p>Выплывающий список проблемы</p>
-                        <div style={{ flex: 1 }}></div>
-                        <p className="selected_service__text-light">Всего</p>
-                        <p className="selected_service__text-price">
-                          {getSumPrice()} ₽
-                        </p>
-                        <div
-                          className="selected_service__arrow"
-                          style={{
-                            rotate: visibleListSelectedServices
-                              ? '-90deg'
-                              : '90deg',
-                          }}
-                          onClick={() =>
-                            setVisibleListSelectedServices((prev) => !prev)
-                          }
-                        >
-                          <img src="/img/sliderright.png" alt="" />
-                        </div>
-                      </div>
-                      {visibleListSelectedServices ? (
-                        <div className="selected_service__services">
-                          {selectedService.map((index, i) => (
-                            <div
-                              key={i}
-                              className="selected_service__service-row"
-                            >
-                              <p className="selected_service__name">
-                                {prices[index]['name']}
-                              </p>
-                              <div style={{ flex: 1 }}></div>
-                              <p className="selected_service__price">
-                                {prices[index]['price']} ₽
-                              </p>
-                              <p className="selected_service__delivery">
-                                {prices[index]['delivery']}
-                              </p>
-                              <div className="selected_service__checkbox">
-                                <input
-                                  checked={
-                                    !ignoreSelectedServices.includes(index)
-                                  }
-                                  type="checkbox"
-                                  name=""
-                                  id=""
-                                  onChange={() => addRemoveIgnoreService(index)}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                          <div className="selected_service__final">
-                            <p className="selected_service__text-light">
-                              Всего
-                            </p>
-                            <p className="selected_service__text-price">
-                              {getSumPrice()} ₽
-                            </p>
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-
-                    <textarea
-                      className="descdetail"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Описание проблемы"
-                      cols="30"
-                      rows="10"
-                    />
-                    <button className={`done ${style.fix_btn}`} type="submit">
-                      Отправить
-                    </button>
-                  </form>
-                </div>
-              </div>
+              <OrderModal
+                isOpen={show}
+                onClose={handleOrderModalClose}
+                onSubmit={onSubmit}
+                formError={formError}
+                isAuthorized={ui.isAuthorized}
+                name={name}
+                phone={phone}
+                onNameChange={setName}
+                onPhoneChange={setPhone}
+                description={description}
+                onDescriptionChange={setDescription}
+                selectedService={selectedService}
+                prices={prices}
+                totalPrice={totalPrice}
+                visibleListSelectedServices={visibleListSelectedServices}
+                onToggleSelectedServices={toggleSelectedServicesVisibility}
+                ignoreSelectedServices={ignoreSelectedServices}
+                onToggleIgnoreService={addRemoveIgnoreService}
+                defaultName={user.u_name}
+                defaultPhone={user.u_phone}
+              />
             </div>
           </div>
 
@@ -824,45 +618,7 @@ function ServiceDetail() {
           </div>
         </section>
 
-        {/* цены */}
-        <section className="detail__price">
-          <div className="container detail-price-container">
-            <Swiper
-              slidesPerView={4}
-              spaceBetween={30}
-              navigation={true}
-              modules={[Navigation]}
-              className={style.swiper_price}
-              breakpoints={{
-                0: {
-                  slidesPerView: 2,
-                },
-                800: {
-                  slidesPerView: 3,
-                },
-                1124: {
-                  slidesPerView: 4,
-                },
-              }}
-            >
-              {prices.map((obj, index) => (
-                <SwiperSlide key={index} className="sliderr">
-                  <div
-                    className={`detail__price__card ${
-                      !selectedService.includes(index) ? 'red' : null
-                    }`}
-                  >
-                    <div className="price">
-                      <h1>{obj['price']}</h1>
-                      <img width="10px" src="/img/rubl.png" alt="" />
-                    </div>
-                    <p>{obj['model']}</p>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
+        <PriceCarousel prices={prices} selectedService={selectedService} />
 
         <section className="map">
           <YMap
@@ -873,308 +629,21 @@ function ServiceDetail() {
         </section>
       </div>
 
-      {/* Условный рендеринг модальных окон */}
-      {selectedMaster.id && (
-        <div style={{ display: 'flex', position: 'absolute' }}>
-          <div
-            style={{
-              position: 'absolute',
-              zIndex: 1,
-              bottom: '0',
-              left: '370px',
-              display: 'flex',
-              gap: '10px',
-            }}
-          >
-            {showSmallModal && (
-              <div className="info_master">
-                <div
-                  className="info_master__close"
-                  onClick={handleCloseModals}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <img src="/img/close.svg" alt="" />
-                </div>
+      <MasterInfoPanels
+        isVisible={Boolean(selectedMaster.id)}
+        showSmallModal={showSmallModal}
+        showBigModal={showBigModal}
+        selectedMaster={selectedMaster}
+        onClose={handleCloseModals}
+        galleryItems={test_price}
+        onOpenGallery={openModal}
+      />
 
-                <div className="info_master__row1">
-                  <img src="/img/profile__image.png" alt="" />
-                  <div className="info_master__about">
-                    <p>{selectedMaster.name}</p>
-                    <p>{selectedMaster.info}</p>
-                    <div className="info_master__stars">
-                      <Rating
-                        size={18}
-                        readonly
-                        initialValue={selectedMaster.rating}
-                        allowFraction
-                        fillColor="#FFC107"
-                        emptyColor="#E4E5E9"
-                      />
-                    </div>
-                    <div className="info_master__row-links">
-                      <Link to={`/client/feedback/${selectedMaster.id}`}>
-                        {selectedMaster.reviews} отзыва
-                      </Link>
-                      <button
-                        onClick={handleCloseModals}
-                        aria-label="Закрыть окно с информацией о мастере"
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: 'inherit',
-                          textDecoration: 'underline',
-                          cursor: 'pointer',
-                          padding: 0,
-                          font: 'inherit'
-                        }}
-                      >
-                        Закрыть
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="info_master__info">{selectedMaster.address}</p>
-                <p className="info_master__info">Открыт: с 9 до 21</p>
-                <p className="info_master__text-about">
-                  <span className="info_master__text-about-light">
-                    Имя организации
-                  </span>
-                  {selectedMaster.orgName}
-                </p>
-                <p className="info_master__text-about">
-                  <span className="info_master__text-about-light">Опыт</span>
-                  {selectedMaster.experience}
-                </p>
-                <p className="info_master__text-about">
-                  <span className="info_master__text-about-light">
-                    На сайте
-                  </span>
-                  с {selectedMaster.onSiteSince}
-                </p>
-                <p className="info_master__text-about">
-                  <span className="info_master__text-about-light">Статус</span>
-                  {selectedMaster.status}
-                </p>
-                <p className="info_master__text-about--accent">
-                  <span className="info_master__text-about-light">Оценка</span>
-                  {selectedMaster.rating}
-                </p>
-                <p className="info_master__text-about--accent">
-                  <span className="info_master__text-about-light">
-                    заказов выполнено
-                  </span>
-                  {selectedMaster.ordersCompleted}
-                </p>
-                <p className="info_master__text-about--accent">
-                  <span className="info_master__text-about-light">
-                    Заказов успешно сдано
-                  </span>
-                  {selectedMaster.successRate}
-                </p>
-                <p className="info_master__text-about--accent">
-                  <span className="info_master__text-about-light">
-                    2 повторных заказов
-                  </span>
-                  {selectedMaster.repeatOrders}
-                </p>
-              </div>
-            )}
-            {showBigModal && (
-              <div className="info_master_big">
-                <div>
-                  <div
-                    className="info_master__close"
-                    onClick={handleCloseModals}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <img src="/img/close.svg" alt="" />
-                  </div>
-
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Вид категории
-                    </span>
-                    {selectedMaster.categoryView}
-                  </p>
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Категория
-                    </span>
-                    {selectedMaster.categories}
-                  </p>
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Бренды
-                    </span>
-                    {selectedMaster.brands}
-                  </p>
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Ваша деятельность
-                    </span>
-                    {selectedMaster.activity}
-                  </p>
-
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Основное направление
-                    </span>
-                    {selectedMaster.mainFocus}
-                  </p>
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Основной бизнес
-                    </span>
-                    {selectedMaster.businessType}
-                  </p>
-                  <p className="info_master_big__text-about">
-                    <span className="info_master_big__text-about-light">
-                      Об организации:{' '}
-                    </span>
-                  </p>
-                  <p className="info_master_big__text">
-                    {selectedMaster.aboutOrg}
-                  </p>
-
-                  <div>
-                    <Swiper
-                      slidesPerView={4}
-                      spaceBetween={30}
-                      navigation={true}
-                      modules={[Navigation]}
-                      className={style.swiper}
-                      breakpoints={{
-                        0: {
-                          slidesPerView: 2,
-                        },
-                        800: {
-                          slidesPerView: 2,
-                        },
-                        1124: {
-                          slidesPerView: 3,
-                        },
-                      }}
-                    >
-                      {test_price.map((obj, index) => (
-                        <SwiperSlide
-                          key={index}
-                          className={style.swiper__slide}
-                        >
-                          <div className={style.slide__empty}>
-                            <img
-                              onClick={() => openModal(obj.img)}
-                              style={{ width: 100 }}
-                              src={obj.img}
-                              alt=""
-                            />
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </div>
-                </div>
-
-                <div></div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Модальное окно с слайдером */}
-      {isModalOpen && (
-        <div className="modal" onClick={closeModal}>
-          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-            <button className="closeBtn" onClick={closeModal}>
-              ×
-            </button>
-
-            {/* Слайдер внутри модального окна */}
-            <Swiper
-              navigation={true}
-              modules={[Navigation]}
-              className="modalSwiper"
-            >
-              {test_price.map((image, index) => (
-                <SwiperSlide key={index}>
-                  <div className="modal-content-info">
-                    <img src={image.img} alt={`Slide ${index + 1}`} />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      )}
-
-      {/* Добавим стили для модального окна */}
-      <style jsx>{`
-        .modal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.8);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 9999;
-        }
-
-        @media screen and (max-width: 1000px) {
-          .modalContent {
-            height: 50% !important;
-          }
-          .modal img {
-            width: 100% !important;
-            height: auto !important;
-          }
-        }
-
-        .modal-content-info {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-        }
-
-        .modalContent {
-          position: relative;
-          padding: 20px;
-          background: white;
-          width: 60%;
-          height: 80%;
-          overflow: hidden;
-        }
-
-        .modal img {
-          width: auto;
-          height: 80%;
-        }
-
-        .closeBtn {
-          top: 0px;
-          position: absolute;
-          right: 10px;
-          font-size: 30px;
-          background: none;
-          border: none;
-          color: #333;
-          cursor: pointer;
-        }
-
-        .closeBtn:hover {
-          color: red;
-        }
-
-        .modalSwiper {
-          width: 100%;
-          height: 100%;
-        }
-      `}</style>
+      <GalleryModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        images={test_price}
+      />
     </ServiceDetailContext.Provider>
   );
 }
